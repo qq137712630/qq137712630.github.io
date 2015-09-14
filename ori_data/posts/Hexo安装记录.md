@@ -10,22 +10,31 @@ title: Hexo安装记录
 [git](https://git-scm.com/),这个没被墙
 ### Node.JS:
 [Node.JS](http://nodejs.org/)     
-####### 注意 安装完成后添加Path环境变量，使```  npm  ```命令生效
+#### 注意 安装完成后添加Path环境变量，使```  npm  ```命令生效
+
 ### 安装Hexo
 
 	 1 npm install -g hexo-cli 
 	 2 npm install hexo --save 
 
 
-[https://hexo.io/zh-cn/docs/index.html#安装](https://hexo.io/zh-cn/docs/index.html#安装)
+有时可能会报错：hexo不是命令。这时，只要把在安装 ``` npm install hexo --save ```的node_modules\\.bin加入环境变量，再重新打开命令行即可（注！这很重要，因为命令行不会刷新！）。    
+如：D:\nodejspojo\hexo\node_modules\.bin     
+[https://hexo.io/zh-cn/docs/index.html#安装](https://hexo.io/zh-cn/docs/index.html#安装)     
 
 ## Hexo初始化配置
 ### 创建Hexo文件夹
 安装完成后，根据自己喜好建立目录（如``` D:\nodejspojo\hexo ```），进入Git Bash切换到该路径下``` D:\nodejspojo\hexo```执行以下指令
-	1 hexo init
+
+	hexo init
+
+
 ### 安装Hexo插件
+
 	npm install
+
 这样装会漏掉部分插件,如:	    
+
 hexo-deployer-git
 
 	npm install hexo-deployer-git --save
