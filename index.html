@@ -61,6 +61,96 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-找不到org.apache.http" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/12/30/找不到org.apache.http/" class="article-date">
+  <time datetime="2015-12-30T09:24:48.901Z" itemprop="datePublished">2015-12-30</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/12/30/找不到org.apache.http/">找不到org.apache.http</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="原因：">原因：</h1><p>android 6.0 (sdk版本 23+)已经不支持httpclient这个类了<br>搜索关键词：<code>sdk 23 httpclient</code>，可以看到相关的信息</p>
+<h1 id="解决方法：">解决方法：</h1><p>你可以使用URLConnection，或者  用sdk 22</p>
+<pre><code><span class="list">(<span class="keyword">compile</span><span class="quoted">'com</span>.android.support<span class="keyword">:appcompat-v7</span>:<span class="number">22.2</span>.<span class="number">0</span>')</span>
+</code></pre><p>如果必须使用sdk 23,添加如下代码：</p>
+<pre><code>android {
+    <span class="attribute">...</span><span class="built_in">.
+    </span>useLibrary <span class="string">'org.apache.http.legacy'</span>
+}
+</code></pre><ul>
+<li><a href="http://stackoverflow.com/questions/32153318/httpclient-wont-import-in-android-studio" target="_blank" rel="external">Android 6.0 以及HttpClient</a></li>
+<li><a href="http://stackoverflow.com/questions/32153318/httpclient-wont-import-in-android-studio" target="_blank" rel="external">HttpClient won’t import in Android Studio</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/12/30/找不到org.apache.http/" data-id="ciismske50009ukjw9nm72bjp" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-RxJava学习" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/12/03/RxJava学习/" class="article-date">
+  <time datetime="2015-12-03T15:15:42.793Z" itemprop="datePublished">2015-12-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/12/03/RxJava学习/">RxJava学习</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="github">github</h1><pre><code><span class="string">https:</span><span class="comment">//github.com/ReactiveX/RxAndroid</span>
+<span class="string">https:</span><span class="comment">//github.com/ReactiveX/RxJava</span>
+</code></pre><h1 id="相关文章">相关文章</h1><ul>
+<li><a href="http://gank.io/post/560e15be2dca930e00da1083#toc_1" target="_blank" rel="external">给 Android 开发者的 RxJava 详解</a></li>
+<li><a href="http://segmentfault.com/a/1190000004049490" target="_blank" rel="external">谜之RxJava （一） —— 最基本的观察者模式</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/12/03/RxJava学习/" data-id="ciismskek000fukjwsh0dxt00" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Apk 动态加载jar" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2015/11/11/Apk 动态加载jar/" class="article-date">
@@ -97,7 +187,7 @@ E:\Android\adt-bundle-windows-x86-<span class="number">20140702</span>\sdk\build
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/11/11/Apk 动态加载jar/" data-id="cigu90elp0000jsjw87w4hmvr" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/11/11/Apk 动态加载jar/" data-id="ciismskdg0000ukjw8omf4shg" class="article-share-link">Share</a>
       
       
     </footer>
@@ -169,7 +259,7 @@ http:<span class="comment">//jiagu.360.cn/1101144936.php?dtid=1101144931&amp;did
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/11/11/二次打包：apk加入自己的sdk包/" data-id="cigu90emk0009jsjwyf2q5x9p" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/11/11/二次打包：apk加入自己的sdk包/" data-id="ciismskea000aukjw5w2qd0bl" class="article-share-link">Share</a>
       
       
     </footer>
@@ -256,7 +346,7 @@ Cursor mCursor = mDb.rawQuery(sql, null);</span></span>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/11/10/SQLite使用中遇到的坑/" data-id="cigu90emu000djsjwi9cx6ne4" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/11/10/SQLite使用中遇到的坑/" data-id="ciismskei000eukjwmlv3gs7h" class="article-share-link">Share</a>
       
       
     </footer>
@@ -295,7 +385,7 @@ Cursor mCursor = mDb.rawQuery(sql, null);</span></span>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/11/09/untiy/2d/game/2d-game-00-开始/" data-id="cigu90emo000ajsjw4395k45o" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/11/09/untiy/2d/game/2d-game-00-开始/" data-id="ciismsked000bukjwcae1fywa" class="article-share-link">Share</a>
       
       
     </footer>
@@ -334,7 +424,7 @@ Cursor mCursor = mDb.rawQuery(sql, null);</span></span>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/10/10/apk测试与处理/" data-id="cigu90ems000cjsjw26g276gj" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/10/10/apk测试与处理/" data-id="ciismskeg000dukjwuhyw8z57" class="article-share-link">Share</a>
       
       
     </footer>
@@ -427,7 +517,7 @@ hexo s <span class="comment">#server</span>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/09/14/Hexo安装记录/" data-id="cigu90emx000ejsjwf25ecs5h" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/09/14/Hexo安装记录/" data-id="ciismsken000gukjw4nk7bdgf" class="article-share-link">Share</a>
       
       
     </footer>
@@ -473,7 +563,7 @@ hexo s <span class="comment">#server</span>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/09/14/hello-world/" data-id="cigu90emq000bjsjwi3ozbpkm" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/09/14/hello-world/" data-id="ciismskee000cukjwzn9jy3rh" class="article-share-link">Share</a>
       
       
     </footer>
@@ -498,7 +588,7 @@ hexo s <span class="comment">#server</span>
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">September 2015</a><span class="archive-list-count">2</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">September 2015</a><span class="archive-list-count">2</span></li></ul>
     </div>
   </div>
 
@@ -510,6 +600,14 @@ hexo s <span class="comment">#server</span>
       <ul>
         
           <li>
+            <a href="/2015/12/30/找不到org.apache.http/">找不到org.apache.http</a>
+          </li>
+        
+          <li>
+            <a href="/2015/12/03/RxJava学习/">RxJava学习</a>
+          </li>
+        
+          <li>
             <a href="/2015/11/11/Apk 动态加载jar/">Apk 动态加载jar</a>
           </li>
         
@@ -519,14 +617,6 @@ hexo s <span class="comment">#server</span>
         
           <li>
             <a href="/2015/11/10/SQLite使用中遇到的坑/">SQLite 和 greenDAO 使用中遇到的坑</a>
-          </li>
-        
-          <li>
-            <a href="/2015/11/09/untiy/2d/game/2d-game-00-开始/">2d-game-00-开始</a>
-          </li>
-        
-          <li>
-            <a href="/2015/10/10/apk测试与处理/">apk测试与处理</a>
           </li>
         
       </ul>

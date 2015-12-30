@@ -3,17 +3,30 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Archives: 2015/11 | Hexo</title>
+  <title>找不到org.apache.http | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/archives/2015/11/index.html">
+  <meta name="description" content="原因：android 6.0 (sdk版本 23+)已经不支持httpclient这个类了搜索关键词：sdk 23 httpclient，可以看到相关的信息
+解决方法：你可以使用URLConnection，或者  用sdk 22
+(compile&apos;com.android.support:appcompat-v7:22.2.0&apos;)
+如果必须使用sdk 23,添加如下代码：
+android {">
+<meta property="og:type" content="article">
+<meta property="og:title" content="找不到org.apache.http">
+<meta property="og:url" content="http://yoursite.com/2015/12/30/找不到org.apache.http/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description">
+<meta property="og:description" content="原因：android 6.0 (sdk版本 23+)已经不支持httpclient这个类了搜索关键词：sdk 23 httpclient，可以看到相关的信息
+解决方法：你可以使用URLConnection，或者  用sdk 22
+(compile&apos;com.android.support:appcompat-v7:22.2.0&apos;)
+如果必须使用sdk 23,添加如下代码：
+android {">
+<meta property="og:updated_time" content="2015-12-30T09:24:48.901Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
-<meta name="twitter:description">
+<meta name="twitter:title" content="找不到org.apache.http">
+<meta name="twitter:description" content="原因：android 6.0 (sdk版本 23+)已经不支持httpclient这个类了搜索关键词：sdk 23 httpclient，可以看到相关的信息
+解决方法：你可以使用URLConnection，或者  用sdk 22
+(compile&apos;com.android.support:appcompat-v7:22.2.0&apos;)
+如果必须使用sdk 23,添加如下代码：
+android {">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -59,96 +72,64 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2015" class="archive-year">2015</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2015/11/11/Apk 动态加载jar/" class="archive-article-date">
-  <time datetime="2015-11-11T03:02:17.990Z" itemprop="datePublished">Nov 11</time>
+        <section id="main"><article id="post-找不到org.apache.http" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/12/30/找不到org.apache.http/" class="article-date">
+  <time datetime="2015-12-30T09:24:48.901Z" itemprop="datePublished">2015-12-30</time>
 </a>
-      
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/11/11/Apk 动态加载jar/">Apk 动态加载jar</a>
+    <h1 class="article-title" itemprop="name">
+      找不到org.apache.http
     </h1>
   
 
-    </header>
-  </div>
-</article>
-  
+      </header>
     
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2015/11/11/二次打包：apk加入自己的sdk包/" class="archive-article-date">
-  <time datetime="2015-11-11T03:01:50.347Z" itemprop="datePublished">Nov 11</time>
-</a>
+    <div class="article-entry" itemprop="articleBody">
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/11/11/二次打包：apk加入自己的sdk包/">Apk 加入sdk的流程</a>
-    </h1>
-  
+        <h1 id="原因：">原因：</h1><p>android 6.0 (sdk版本 23+)已经不支持httpclient这个类了<br>搜索关键词：<code>sdk 23 httpclient</code>，可以看到相关的信息</p>
+<h1 id="解决方法：">解决方法：</h1><p>你可以使用URLConnection，或者  用sdk 22</p>
+<pre><code><span class="list">(<span class="keyword">compile</span><span class="quoted">'com</span>.android.support<span class="keyword">:appcompat-v7</span>:<span class="number">22.2</span>.<span class="number">0</span>')</span>
+</code></pre><p>如果必须使用sdk 23,添加如下代码：</p>
+<pre><code>android {
+    <span class="attribute">...</span><span class="built_in">.
+    </span>useLibrary <span class="string">'org.apache.http.legacy'</span>
+}
+</code></pre><ul>
+<li><a href="http://stackoverflow.com/questions/32153318/httpclient-wont-import-in-android-studio" target="_blank" rel="external">Android 6.0 以及HttpClient</a></li>
+<li><a href="http://stackoverflow.com/questions/32153318/httpclient-wont-import-in-android-studio" target="_blank" rel="external">HttpClient won’t import in Android Studio</a></li>
+</ul>
 
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2015/11/10/SQLite使用中遇到的坑/" class="archive-article-date">
-  <time datetime="2015-11-10T14:53:45.013Z" itemprop="datePublished">Nov 10</time>
-</a>
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/11/10/SQLite使用中遇到的坑/">SQLite 和 greenDAO 使用中遇到的坑</a>
-    </h1>
-  
-
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2015/11/09/untiy/2d/game/2d-game-00-开始/" class="archive-article-date">
-  <time datetime="2015-11-09T14:55:16.503Z" itemprop="datePublished">Nov 9</time>
-</a>
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/12/30/找不到org.apache.http/" data-id="ciismske50009ukjw9nm72bjp" class="article-share-link">Share</a>
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/11/09/untiy/2d/game/2d-game-00-开始/">2d-game-00-开始</a>
-    </h1>
-  
-
-    </header>
+      
+    </footer>
   </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2015/12/03/RxJava学习/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">RxJava学习</div>
+    </a>
+  
+</nav>
+
+  
 </article>
-  
-  
-    </div></section>
-  
+
 </section>
         
           <aside id="sidebar">
