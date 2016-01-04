@@ -61,6 +61,89 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-MultiStateView加载框架学习" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/01/01/MultiStateView加载框架学习/" class="article-date">
+  <time datetime="2016-01-01T12:28:14.113Z" itemprop="datePublished">2016-01-01</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/01/01/MultiStateView加载框架学习/">MultiStateView加载框架学习</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a href="https://github.com/Kennyc1012/MultiStateView" target="_blank" rel="external">github-MultiStateView</a></p>
+<p>第一次看到是从<a href="http://gank.io/" target="_blank" rel="external">http://gank.io/</a>，描述为这样：</p>
+<pre><code>MultiStateView：根据从网络获取数据是否加载正确以及是否有数据来显示对应不同的状态的自定义<span class="built_in">view</span>（Jason）
+</code></pre><h1 id="代码定位方式">代码定位方式</h1><p><a href="http://drakeet.me/quickly-locate-the-function-code" target="_blank" rel="external">拿到一份开源项目，快速定位感兴趣的功能代码</a></p>
+<h1 id="说明">说明</h1><h2 id="布局">布局</h2><pre><code>&lt;com<span class="class">.kennyc</span><span class="class">.view</span><span class="class">.MultiStateView</span> xmlns:android=<span class="string">"http://schemas.android.com/apk/res/android"</span>
+    xmlns:tools=<span class="string">"http://schemas.android.com/tools"</span>
+    xmlns:app=<span class="string">"http://schemas.android.com/apk/res-auto"</span>
+    android:id=<span class="string">"@+id/multiStateView"</span>
+    android:layout_width=<span class="string">"match_parent"</span>
+    android:layout_height=<span class="string">"match_parent"</span>
+    app:msv_errorView=<span class="string">"@layout/error_view"</span>
+    app:msv_emptyView=<span class="string">"@layout/empty_view"</span>
+    app:msv_loadingView=<span class="string">"@layout/loading_view"</span>
+    app:msv_viewState=<span class="string">"content"</span>
+    tools:context=<span class="string">".MainActivity"</span>&gt;
+
+    &lt;ListView
+        android:id=<span class="string">"@+id/list"</span>
+        android:layout_width=<span class="string">"match_parent"</span>
+        android:layout_height=<span class="string">"match_parent"</span>
+        tools:listitem=<span class="string">"@android:layout/simple_list_item_1"</span> /&gt;
+
+&lt;/com<span class="class">.kennyc</span><span class="class">.view</span><span class="class">.MultiStateView</span>&gt;
+</code></pre><ul>
+<li>app:msv_errorView=”@layout/error_view” 错误界面</li>
+<li>app:msv_emptyView=”@layout/empty_view” 没内容界面</li>
+<li>app:msv_loadingView=”@layout/loading_view” 加载中界面</li>
+<li>app:msv_viewState=”content” 加载成功</li>
+</ul>
+<h2 id="代码">代码</h2><p>操作指定状态的界面</p>
+<p>栗子，错误界面-MultiStateView.VIEW_STATE_ERROR：</p>
+<pre><code>mMultiStateView = (MultiStateView) findViewById(R.id.multiStateView);
+mMultiStateView.getView(MultiStateView.VIEW_STATE_ERROR).findViewById(R.id.retry)
+        .setOnClickListener(<span class="keyword">new</span> View.OnClickListener() {
+            <span class="annotation">@Override</span>
+            <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>{
+                ....
+            }
+        });
+</code></pre><h3 id="状态切换">状态切换</h3><p>加载中，不会自动消失，要调用其他3种状态才会消失：</p>
+<pre><code><span class="tag">mMultiStateView</span><span class="class">.setViewState</span>(<span class="tag">MultiStateView</span><span class="class">.VIEW_STATE_LOADING</span>);
+</code></pre><p>加载成功：</p>
+<pre><code><span class="tag">mMultiStateView</span><span class="class">.setViewState</span>(<span class="tag">MultiStateView</span><span class="class">.VIEW_STATE_CONTENT</span>);
+</code></pre><p>加载失败：</p>
+<pre><code><span class="tag">mMultiStateView</span><span class="class">.setViewState</span>(<span class="tag">MultiStateView</span><span class="class">.VIEW_STATE_ERROR</span>);
+</code></pre><p>加载成功，但没有内容：</p>
+<pre><code><span class="tag">mMultiStateView</span><span class="class">.setViewState</span>(<span class="tag">MultiStateView</span><span class="class">.VIEW_STATE_EMPTY</span>);
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/01/01/MultiStateView加载框架学习/" data-id="ciizgj7t5000hcojw7z1hh4bg" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-找不到org.apache.http" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2015/12/30/找不到org.apache.http/" class="article-date">
@@ -99,7 +182,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/12/30/找不到org.apache.http/" data-id="ciismske50009ukjw9nm72bjp" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/12/30/找不到org.apache.http/" data-id="ciizgj7sh0009cojw2r62ivix" class="article-share-link">Share</a>
       
       
     </footer>
@@ -141,7 +224,39 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/12/03/RxJava学习/" data-id="ciismskek000fukjwsh0dxt00" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/12/03/RxJava学习/" data-id="ciizgj7t1000gcojwgee7lw1e" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-adupwardSDK反编译接入方法" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/11/12/adupwardSDK反编译接入方法/" class="article-date">
+  <time datetime="2015-11-12T06:06:43.034Z" itemprop="datePublished">2015-11-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="apktool-yml复制以下内容到目标反编译的apktool-yml下">apktool.yml复制以下内容到目标反编译的apktool.yml下</h2><pre><code><span class="symbol">unknownFiles:</span>
+  com/adupward/<span class="class"><span class="keyword">lib</span>/<span class="title">fangcha</span>.<span class="title">png</span>: '8'</span>
+  com/adupward/<span class="class"><span class="keyword">lib</span>/<span class="title">lslide</span>.<span class="title">png</span>: '8'</span>
+  com/adupward/<span class="class"><span class="keyword">lib</span>/<span class="title">smallcha</span>.<span class="title">png</span>: '8'</span>
+  com/adupward/<span class="class"><span class="keyword">lib</span>/<span class="title">sslide</span>.<span class="title">png</span>: '8'</span>
+  com/adupward/<span class="class"><span class="keyword">lib</span>/<span class="title">yuancha</span>.<span class="title">png</span>: '8'</span>
+</code></pre><h2 id="复制unknown文件夹到目标反编译的根目录下的unknown文件夹，没有则创建">复制unknown文件夹到目标反编译的根目录下的unknown文件夹，没有则创建</h2><h2 id="复制adupwardSDK-example\res\values\integers-xml_到_目标反编译的res\values\_文件夹，没有则创建">复制adupwardSDK-example\res\values\integers.xml 到 目标反编译的res\values\ 文件夹，没有则创建</h2>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/11/12/adupwardSDK反编译接入方法/" data-id="ciizgj7sv000ecojwsj1gdzby" class="article-share-link">Share</a>
       
       
     </footer>
@@ -187,7 +302,7 @@ E:\Android\adt-bundle-windows-x86-<span class="number">20140702</span>\sdk\build
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/11/11/Apk 动态加载jar/" data-id="ciismskdg0000ukjw8omf4shg" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/11/11/Apk 动态加载jar/" data-id="ciizgj7bx0000cojw2r40t5cq" class="article-share-link">Share</a>
       
       
     </footer>
@@ -259,7 +374,7 @@ http:<span class="comment">//jiagu.360.cn/1101144936.php?dtid=1101144931&amp;did
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/11/11/二次打包：apk加入自己的sdk包/" data-id="ciismskea000aukjw5w2qd0bl" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/11/11/二次打包：apk加入自己的sdk包/" data-id="ciizgj7sl000acojwk0fww6o4" class="article-share-link">Share</a>
       
       
     </footer>
@@ -346,7 +461,7 @@ Cursor mCursor = mDb.rawQuery(sql, null);</span></span>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/11/10/SQLite使用中遇到的坑/" data-id="ciismskei000eukjwmlv3gs7h" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/11/10/SQLite使用中遇到的坑/" data-id="ciizgj7sx000fcojwgwlw2qag" class="article-share-link">Share</a>
       
       
     </footer>
@@ -385,7 +500,7 @@ Cursor mCursor = mDb.rawQuery(sql, null);</span></span>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/11/09/untiy/2d/game/2d-game-00-开始/" data-id="ciismsked000bukjwcae1fywa" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/11/09/untiy/2d/game/2d-game-00-开始/" data-id="ciizgj7sn000bcojwh0f71c8f" class="article-share-link">Share</a>
       
       
     </footer>
@@ -424,7 +539,7 @@ Cursor mCursor = mDb.rawQuery(sql, null);</span></span>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/10/10/apk测试与处理/" data-id="ciismskeg000dukjwuhyw8z57" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/10/10/apk测试与处理/" data-id="ciizgj7ss000dcojw5v1ivhm1" class="article-share-link">Share</a>
       
       
     </footer>
@@ -517,7 +632,7 @@ hexo s <span class="comment">#server</span>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/09/14/Hexo安装记录/" data-id="ciismsken000gukjw4nk7bdgf" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/09/14/Hexo安装记录/" data-id="ciizgj7t8000icojw1suj8hza" class="article-share-link">Share</a>
       
       
     </footer>
@@ -527,52 +642,10 @@ hexo s <span class="comment">#server</span>
 
 
   
-    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/09/14/hello-world/" class="article-date">
-  <time datetime="2015-09-14T09:40:34.152Z" itemprop="datePublished">2015-09-14</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/09/14/hello-world/">Hello World</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a href="http://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="http://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="http://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick_Start">Quick Start</h2><p>Hello World</p>
-<h3 id="Create_a_new_post">Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run_server">Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate_static_files">Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy_to_remote_sites">Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/09/14/hello-world/" data-id="ciismskee000cukjwzn9jy3rh" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
+    <nav id="page-nav">
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+    </nav>
   
 </section>
         
@@ -588,7 +661,7 @@ hexo s <span class="comment">#server</span>
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">September 2015</a><span class="archive-list-count">2</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">September 2015</a><span class="archive-list-count">2</span></li></ul>
     </div>
   </div>
 
@@ -600,6 +673,10 @@ hexo s <span class="comment">#server</span>
       <ul>
         
           <li>
+            <a href="/2016/01/01/MultiStateView加载框架学习/">MultiStateView加载框架学习</a>
+          </li>
+        
+          <li>
             <a href="/2015/12/30/找不到org.apache.http/">找不到org.apache.http</a>
           </li>
         
@@ -608,15 +685,11 @@ hexo s <span class="comment">#server</span>
           </li>
         
           <li>
+            <a href="/2015/11/12/adupwardSDK反编译接入方法/">(no title)</a>
+          </li>
+        
+          <li>
             <a href="/2015/11/11/Apk 动态加载jar/">Apk 动态加载jar</a>
-          </li>
-        
-          <li>
-            <a href="/2015/11/11/二次打包：apk加入自己的sdk包/">Apk 加入sdk的流程</a>
-          </li>
-        
-          <li>
-            <a href="/2015/11/10/SQLite使用中遇到的坑/">SQLite 和 greenDAO 使用中遇到的坑</a>
           </li>
         
       </ul>
@@ -631,7 +704,7 @@ hexo s <span class="comment">#server</span>
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2015 John Doe<br>
+      &copy; 2016 John Doe<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
