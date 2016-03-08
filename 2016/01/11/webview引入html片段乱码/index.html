@@ -3,17 +3,27 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Archives: 2015/12 | Hexo</title>
+  <title>webview引入html片段乱码 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/archives/2015/12/index.html">
+  <meta name="description" content="使用 loadData方法是中文部分会出现乱码，即使指定“utf-8”、“gbk”、“gb2312”也一样。
+webView.getSettings().setDefaultTextEncodingName(&quot;UTF -8&quot;);//设置默认为utf-8
+// webView.loadData(data, &quot;text/html&quot;, &quot;UTF -8&quot;);//API提供的标准用法，无法解决乱码问题
+we">
+<meta property="og:type" content="article">
+<meta property="og:title" content="webview引入html片段乱码">
+<meta property="og:url" content="http://yoursite.com/2016/01/11/webview引入html片段乱码/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description">
+<meta property="og:description" content="使用 loadData方法是中文部分会出现乱码，即使指定“utf-8”、“gbk”、“gb2312”也一样。
+webView.getSettings().setDefaultTextEncodingName(&quot;UTF -8&quot;);//设置默认为utf-8
+// webView.loadData(data, &quot;text/html&quot;, &quot;UTF -8&quot;);//API提供的标准用法，无法解决乱码问题
+we">
+<meta property="og:updated_time" content="2016-01-11T08:21:00.885Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
-<meta name="twitter:description">
+<meta name="twitter:title" content="webview引入html片段乱码">
+<meta name="twitter:description" content="使用 loadData方法是中文部分会出现乱码，即使指定“utf-8”、“gbk”、“gb2312”也一样。
+webView.getSettings().setDefaultTextEncodingName(&quot;UTF -8&quot;);//设置默认为utf-8
+// webView.loadData(data, &quot;text/html&quot;, &quot;UTF -8&quot;);//API提供的标准用法，无法解决乱码问题
+we">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -59,58 +69,70 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2015" class="archive-year">2015</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2015/12/30/找不到org.apache.http/" class="archive-article-date">
-  <time datetime="2015-12-30T09:24:48.901Z" itemprop="datePublished">Dec 30</time>
+        <section id="main"><article id="post-webview引入html片段乱码" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/01/11/webview引入html片段乱码/" class="article-date">
+  <time datetime="2016-01-11T08:21:00.885Z" itemprop="datePublished">2016-01-11</time>
 </a>
-      
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/12/30/找不到org.apache.http/">找不到org.apache.http</a>
+    <h1 class="article-title" itemprop="name">
+      webview引入html片段乱码
     </h1>
   
 
-    </header>
-  </div>
-</article>
-  
+      </header>
     
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2015/12/03/RxJava学习/" class="archive-article-date">
-  <time datetime="2015-12-03T15:15:42.793Z" itemprop="datePublished">Dec 3</time>
-</a>
+    <div class="article-entry" itemprop="articleBody">
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/12/03/RxJava学习/">RxJava学习</a>
-    </h1>
-  
+        <p>使用 loadData方法是中文部分会出现乱码，即使指定“utf-8”、“gbk”、“gb2312”也一样。</p>
+<pre><code>webView<span class="built_in">.</span>getSettings()<span class="built_in">.</span>setDefaultTextEncodingName(<span class="string">"UTF -8"</span>);<span class="comment">//设置默认为utf-8</span>
+<span class="comment">// webView.loadData(data, "text/html", "UTF -8");//API提供的标准用法，无法解决乱码问题</span>
+webView<span class="built_in">.</span>loadData(<span class="built_in">data</span>, <span class="string">"text/html; charset=UTF-8"</span>, <span class="built_in">null</span>);<span class="comment">//这种写法可以正确解码</span>
+</code></pre><p>或者考虑使用 loadDataWithBaseURL方法</p>
+<p>参考文章：<a href="http://wj495175289.blog.163.com/blog/static/1620826662012364512840/" target="_blank" rel="external">http://wj495175289.blog.163.com/blog/static/1620826662012364512840/</a></p>
+<ul>
+<li><a href="http://www.cnblogs.com/lipeil/archive/2012/08/18/2645409.html" target="_blank" rel="external">webView loadData 中文乱码问题</a></li>
+</ul>
 
-    </header>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/01/11/webview引入html片段乱码/" data-id="cilj7iylj000cfgjwfp28bjhq" class="article-share-link">Share</a>
+      
+      
+    </footer>
   </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/03/08/65535拆包处理-总结自《其实你不知道MultiDex到底有多坑》/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/01/01/MultiStateView加载框架学习/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">MultiStateView加载框架学习</div>
+    </a>
+  
+</nav>
+
+  
 </article>
-  
-  
-    </div></section>
-  
+
 </section>
         
           <aside id="sidebar">

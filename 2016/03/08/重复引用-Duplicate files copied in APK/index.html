@@ -3,33 +3,39 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Hexo</title>
+  <title>重复引用错误-Duplicate files copied in APK | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="apktool.yml复制以下内容到目标反编译的apktool.yml下unknownFiles:
-  com/adupward/lib/fangcha.png: &apos;8&apos;
-  com/adupward/lib/lslide.png: &apos;8&apos;
-  com/adupward/lib/smallcha.png: &apos;8&apos;
-  com/adupward/lib/sslide.png: &apos;8&apos;
-  com/a">
+  <meta name="description" content="原因：在使用umeng推送时出现了这个问题：    
+Duplicate files copied in APK META-INF/maven/com.squareup.okio/okio/pom.xml
+原因是okhttp和 umeng推送 都使用到okio
+解决方法：你可以在主项目的build.gradle中添加下面的内容，排除重复的东西：
+android {
+    ....
+
+    pa">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/2015/11/12/adupwardSDK反编译接入方法/index.html">
+<meta property="og:title" content="重复引用错误-Duplicate files copied in APK">
+<meta property="og:url" content="http://yoursite.com/2016/03/08/重复引用-Duplicate files copied in APK/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="apktool.yml复制以下内容到目标反编译的apktool.yml下unknownFiles:
-  com/adupward/lib/fangcha.png: &apos;8&apos;
-  com/adupward/lib/lslide.png: &apos;8&apos;
-  com/adupward/lib/smallcha.png: &apos;8&apos;
-  com/adupward/lib/sslide.png: &apos;8&apos;
-  com/a">
-<meta property="og:updated_time" content="2015-11-12T06:06:43.034Z">
+<meta property="og:description" content="原因：在使用umeng推送时出现了这个问题：    
+Duplicate files copied in APK META-INF/maven/com.squareup.okio/okio/pom.xml
+原因是okhttp和 umeng推送 都使用到okio
+解决方法：你可以在主项目的build.gradle中添加下面的内容，排除重复的东西：
+android {
+    ....
+
+    pa">
+<meta property="og:updated_time" content="2016-01-10T10:33:09.531Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
-<meta name="twitter:description" content="apktool.yml复制以下内容到目标反编译的apktool.yml下unknownFiles:
-  com/adupward/lib/fangcha.png: &apos;8&apos;
-  com/adupward/lib/lslide.png: &apos;8&apos;
-  com/adupward/lib/smallcha.png: &apos;8&apos;
-  com/adupward/lib/sslide.png: &apos;8&apos;
-  com/a">
+<meta name="twitter:title" content="重复引用错误-Duplicate files copied in APK">
+<meta name="twitter:description" content="原因：在使用umeng推送时出现了这个问题：    
+Duplicate files copied in APK META-INF/maven/com.squareup.okio/okio/pom.xml
+原因是okhttp和 umeng推送 都使用到okio
+解决方法：你可以在主项目的build.gradle中添加下面的内容，排除重复的东西：
+android {
+    ....
+
+    pa">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -75,29 +81,56 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-adupwardSDK反编译接入方法" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-重复引用-Duplicate files copied in APK" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2015/11/12/adupwardSDK反编译接入方法/" class="article-date">
-  <time datetime="2015-11-12T06:06:43.034Z" itemprop="datePublished">2015-11-12</time>
+    <a href="/2016/03/08/重复引用-Duplicate files copied in APK/" class="article-date">
+  <time datetime="2016-03-08T09:21:11.420Z" itemprop="datePublished">2016-03-08</time>
 </a>
     
   </div>
   <div class="article-inner">
     
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      重复引用错误-Duplicate files copied in APK
+    </h1>
+  
+
+      </header>
+    
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="apktool-yml复制以下内容到目标反编译的apktool-yml下">apktool.yml复制以下内容到目标反编译的apktool.yml下</h2><pre><code><span class="symbol">unknownFiles:</span>
-  com/adupward/<span class="class"><span class="keyword">lib</span>/<span class="title">fangcha</span>.<span class="title">png</span>: '8'</span>
-  com/adupward/<span class="class"><span class="keyword">lib</span>/<span class="title">lslide</span>.<span class="title">png</span>: '8'</span>
-  com/adupward/<span class="class"><span class="keyword">lib</span>/<span class="title">smallcha</span>.<span class="title">png</span>: '8'</span>
-  com/adupward/<span class="class"><span class="keyword">lib</span>/<span class="title">sslide</span>.<span class="title">png</span>: '8'</span>
-  com/adupward/<span class="class"><span class="keyword">lib</span>/<span class="title">yuancha</span>.<span class="title">png</span>: '8'</span>
-</code></pre><h2 id="复制unknown文件夹到目标反编译的根目录下的unknown文件夹，没有则创建">复制unknown文件夹到目标反编译的根目录下的unknown文件夹，没有则创建</h2><h2 id="复制adupwardSDK-example\res\values\integers-xml_到_目标反编译的res\values\_文件夹，没有则创建">复制adupwardSDK-example\res\values\integers.xml 到 目标反编译的res\values\ 文件夹，没有则创建</h2>
+        <h1 id="原因：">原因：</h1><p>在使用umeng推送时出现了这个问题：    </p>
+<pre><code>Duplicate files copied <span class="keyword">in</span> APK META-INF/maven/com<span class="class">.squareup</span><span class="class">.okio</span>/okio/pom.xml
+</code></pre><p>原因是<code>okhttp</code>和 umeng推送 都使用到<code>okio</code></p>
+<h1 id="解决方法：">解决方法：</h1><p>你可以在主项目的build.gradle中添加下面的内容，排除重复的东西：</p>
+<pre><code><span class="xml">android </span><span class="expression">{
+    <span class="variable">....</span>
+
+    <span class="variable">packagingOptions</span> {
+        <span class="variable">exclude</span> '<span class="variable">META-INF</span><span class="end-block">/maven</span><span class="end-block">/com.squareup.okio</span><span class="end-block">/okio</span><span class="end-block">/pom.xml</span>'
+        <span class="variable">exclude</span> '<span class="variable">META-INF</span><span class="end-block">/maven</span><span class="end-block">/com.squareup.okio</span><span class="end-block">/okio</span><span class="end-block">/pom.properties</span>'
+    }</span><span class="xml">
+}</span>
+</code></pre><p>在google的gradle文档中写着：</p>
+<pre><code><span class="label">Configuration</span> <span class="keyword">blocks（配置块）
+</span><span class="label">Listed</span> <span class="keyword">below </span>are the configuration <span class="keyword">blocks </span>available within <span class="keyword">android（下面列出的是在Android的可配置模块）</span>
+</code></pre><p>个人理解为build.gradle中android的内容配置模块：</p>
+<pre><code><span class="tag">android</span> {
+....
+}
+</code></pre><ul>
+<li><a href="http://bbs.umeng.com/thread-12359-1-1.html" target="_blank" rel="external">友盟推送jar文件与okio.jar冲突，看17楼</a></li>
+<li><a href="http://google.github.io/android-gradle-dsl/current/" target="_blank" rel="external">Google的gradle文档</a></li>
+</ul>
+
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/11/12/adupwardSDK反编译接入方法/" data-id="cilj7iym4000hfgjwsqrhofs6" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/03/08/重复引用-Duplicate files copied in APK/" data-id="cilj7iyl80009fgjwl3ojuhul" class="article-share-link">Share</a>
       
       
     </footer>
@@ -106,19 +139,10 @@
     
 <nav id="article-nav">
   
-    <a href="/2015/12/03/RxJava学习/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          RxJava学习
-        
-      </div>
-    </a>
   
-  
-    <a href="/2015/11/11/Apk 动态加载jar/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2016/03/08/greedao升级问题：表被删除处理/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">Apk 动态加载jar</div>
+      <div class="article-nav-title"></div>
     </a>
   
 </nav>

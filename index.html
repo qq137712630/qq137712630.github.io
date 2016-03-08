@@ -61,6 +61,542 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-重复引用-Duplicate files copied in APK" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/03/08/重复引用-Duplicate files copied in APK/" class="article-date">
+  <time datetime="2016-03-08T09:21:11.420Z" itemprop="datePublished">2016-03-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/03/08/重复引用-Duplicate files copied in APK/">重复引用错误-Duplicate files copied in APK</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="原因：">原因：</h1><p>在使用umeng推送时出现了这个问题：    </p>
+<pre><code>Duplicate files copied <span class="keyword">in</span> APK META-INF/maven/com<span class="class">.squareup</span><span class="class">.okio</span>/okio/pom.xml
+</code></pre><p>原因是<code>okhttp</code>和 umeng推送 都使用到<code>okio</code></p>
+<h1 id="解决方法：">解决方法：</h1><p>你可以在主项目的build.gradle中添加下面的内容，排除重复的东西：</p>
+<pre><code><span class="xml">android </span><span class="expression">{
+    <span class="variable">....</span>
+
+    <span class="variable">packagingOptions</span> {
+        <span class="variable">exclude</span> '<span class="variable">META-INF</span><span class="end-block">/maven</span><span class="end-block">/com.squareup.okio</span><span class="end-block">/okio</span><span class="end-block">/pom.xml</span>'
+        <span class="variable">exclude</span> '<span class="variable">META-INF</span><span class="end-block">/maven</span><span class="end-block">/com.squareup.okio</span><span class="end-block">/okio</span><span class="end-block">/pom.properties</span>'
+    }</span><span class="xml">
+}</span>
+</code></pre><p>在google的gradle文档中写着：</p>
+<pre><code><span class="label">Configuration</span> <span class="keyword">blocks（配置块）
+</span><span class="label">Listed</span> <span class="keyword">below </span>are the configuration <span class="keyword">blocks </span>available within <span class="keyword">android（下面列出的是在Android的可配置模块）</span>
+</code></pre><p>个人理解为build.gradle中android的内容配置模块：</p>
+<pre><code><span class="tag">android</span> {
+....
+}
+</code></pre><ul>
+<li><a href="http://bbs.umeng.com/thread-12359-1-1.html" target="_blank" rel="external">友盟推送jar文件与okio.jar冲突，看17楼</a></li>
+<li><a href="http://google.github.io/android-gradle-dsl/current/" target="_blank" rel="external">Google的gradle文档</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/03/08/重复引用-Duplicate files copied in APK/" data-id="cilj7iyl80009fgjwl3ojuhul" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-greedao升级问题：表被删除处理" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/03/08/greedao升级问题：表被删除处理/" class="article-date">
+  <time datetime="2016-03-08T09:12:10.640Z" itemprop="datePublished">2016-03-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="greedao升级问题：表被删除处理">greedao升级问题：表被删除处理</h1><h2 id="为何每次数据库版本升级都会数据消失？">为何每次数据库版本升级都会数据消失？</h2><p><a href="https://github.com/greenrobot/greenDAO/issues/60" target="_blank" rel="external">About update database #60</a></p>
+<p><a href="http://blog.csdn.net/fancylovejava/article/details/46713445" target="_blank" rel="external">GreenDAO数据库版本升级</a></p>
+<p>如何你是用 <code>DaoMaster.DevOpenHelper</code> 这个来进行操作，它会每次创建新的数据库版本都会直接删除表后，再创建新表，这是因为它是开发者模式，</p>
+<p>其实数据库版本升级比较麻烦的就是数据的迁移。</p>
+<p>所以想要在升级时操作数据，要自己继承 <code>DaoMaster.OpenHelper</code> ，实现 <code>public void onUpgrade</code> 方法。</p>
+<p>不过也有已封装好的方法：</p>
+<ol>
+<li><p>实现 <code>MigrationHelper</code> </p>
+<pre><code><span class="keyword">public</span> class MigrationHelper {
+
+    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">String</span> CONVERSION_CLASS_NOT_FOUND_EXCEPTION = <span class="string">"MIGRATION HELPER - CLASS DOESN'T MATCH WITH THE CURRENT PARAMETERS"</span>;
+    <span class="keyword">private</span> <span class="keyword">static</span> MigrationHelper instance;
+
+    <span class="keyword">public</span> <span class="keyword">static</span> MigrationHelper getInstance() {
+        <span class="keyword">if</span>(instance == <span class="keyword">null</span>) {
+            instance = <span class="keyword">new</span> MigrationHelper();
+        }
+        <span class="keyword">return</span> instance;
+    }
+
+    <span class="keyword">public</span> <span class="keyword">void</span> migrate(SQLiteDatabase db, Class&lt;? extends AbstractDao&lt;?, ?&gt;&gt;... daoClasses) {
+        generateTempTables(db, daoClasses);
+        DaoMaster.dropAllTables(db, <span class="keyword">true</span>);
+        DaoMaster.createAllTables(db, <span class="keyword">false</span>);
+        restoreData(db, daoClasses);
+    }
+
+    <span class="keyword">private</span> <span class="keyword">void</span> generateTempTables(SQLiteDatabase db, Class&lt;? extends AbstractDao&lt;?, ?&gt;&gt;... daoClasses) {
+        <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; daoClasses.length; i++) {
+            DaoConfig daoConfig = <span class="keyword">new</span> DaoConfig(db, daoClasses[i]);
+
+            <span class="keyword">String</span> divider = <span class="string">""</span>;
+            <span class="keyword">String</span> tableName = daoConfig.tablename;
+            <span class="keyword">String</span> tempTableName = daoConfig.tablename.<span class="built_in">concat</span>(<span class="string">"_TEMP"</span>);
+            ArrayList&lt;<span class="keyword">String</span>&gt; properties = <span class="keyword">new</span> ArrayList&lt;&gt;();
+
+            StringBuilder createTableStringBuilder = <span class="keyword">new</span> StringBuilder();
+
+            createTableStringBuilder.<span class="built_in">append</span>(<span class="string">"CREATE TABLE "</span>).<span class="built_in">append</span>(tempTableName).<span class="built_in">append</span>(<span class="string">" ("</span>);
+
+            <span class="keyword">for</span>(<span class="built_in">int</span> j = <span class="number">0</span>; j &lt; daoConfig.properties.length; j++) {
+                <span class="keyword">String</span> columnName = daoConfig.properties[j].columnName;
+
+                <span class="keyword">if</span>(getColumns(db, tableName).contains(columnName)) {
+                    properties.<span class="built_in">add</span>(columnName);
+
+                    <span class="keyword">String</span> type = <span class="keyword">null</span>;
+
+                    <span class="keyword">try</span> {
+                        type = getTypeByClass(daoConfig.properties[j].type);
+                    } <span class="keyword">catch</span> (Exception exception) {
+                        Log.e(<span class="string">"MigrationHelper"</span>, exception.toString());
+                    }
+
+                    createTableStringBuilder.<span class="built_in">append</span>(divider).<span class="built_in">append</span>(columnName).<span class="built_in">append</span>(<span class="string">" "</span>).<span class="built_in">append</span>(type);
+
+                    <span class="keyword">if</span>(daoConfig.properties[j].primaryKey) {
+                        createTableStringBuilder.<span class="built_in">append</span>(<span class="string">" PRIMARY KEY"</span>);
+                    }
+
+                    divider = <span class="string">","</span>;
+                }
+            }
+            createTableStringBuilder.<span class="built_in">append</span>(<span class="string">");"</span>);
+
+            db.execSQL(createTableStringBuilder.toString());
+
+            StringBuilder insertTableStringBuilder = <span class="keyword">new</span> StringBuilder();
+
+            insertTableStringBuilder.<span class="built_in">append</span>(<span class="string">"INSERT INTO "</span>).<span class="built_in">append</span>(tempTableName).<span class="built_in">append</span>(<span class="string">" ("</span>);
+            insertTableStringBuilder.<span class="built_in">append</span>(TextUtils.<span class="built_in">join</span>(<span class="string">","</span>, properties));
+            insertTableStringBuilder.<span class="built_in">append</span>(<span class="string">") SELECT "</span>);
+            insertTableStringBuilder.<span class="built_in">append</span>(TextUtils.<span class="built_in">join</span>(<span class="string">","</span>, properties));
+            insertTableStringBuilder.<span class="built_in">append</span>(<span class="string">" FROM "</span>).<span class="built_in">append</span>(tableName).<span class="built_in">append</span>(<span class="string">";"</span>);
+
+            db.execSQL(insertTableStringBuilder.toString());
+        }
+    }
+
+    <span class="keyword">private</span> <span class="keyword">void</span> restoreData(SQLiteDatabase db, Class&lt;? extends AbstractDao&lt;?, ?&gt;&gt;... daoClasses) {
+        <span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; daoClasses.length; i++) {
+            DaoConfig daoConfig = <span class="keyword">new</span> DaoConfig(db, daoClasses[i]);
+
+            <span class="keyword">String</span> tableName = daoConfig.tablename;
+            <span class="keyword">String</span> tempTableName = daoConfig.tablename.<span class="built_in">concat</span>(<span class="string">"_TEMP"</span>);
+            ArrayList&lt;<span class="keyword">String</span>&gt; properties = <span class="keyword">new</span> ArrayList();
+
+            <span class="keyword">for</span> (<span class="built_in">int</span> j = <span class="number">0</span>; j &lt; daoConfig.properties.length; j++) {
+                <span class="keyword">String</span> columnName = daoConfig.properties[j].columnName;
+
+                <span class="keyword">if</span>(getColumns(db, tempTableName).contains(columnName)) {
+                    properties.<span class="built_in">add</span>(columnName);
+                }
+            }
+
+            StringBuilder insertTableStringBuilder = <span class="keyword">new</span> StringBuilder();
+
+            insertTableStringBuilder.<span class="built_in">append</span>(<span class="string">"INSERT INTO "</span>).<span class="built_in">append</span>(tableName).<span class="built_in">append</span>(<span class="string">" ("</span>);
+            insertTableStringBuilder.<span class="built_in">append</span>(TextUtils.<span class="built_in">join</span>(<span class="string">","</span>, properties));
+            insertTableStringBuilder.<span class="built_in">append</span>(<span class="string">") SELECT "</span>);
+            insertTableStringBuilder.<span class="built_in">append</span>(TextUtils.<span class="built_in">join</span>(<span class="string">","</span>, properties));
+            insertTableStringBuilder.<span class="built_in">append</span>(<span class="string">" FROM "</span>).<span class="built_in">append</span>(tempTableName).<span class="built_in">append</span>(<span class="string">";"</span>);
+
+            StringBuilder dropTableStringBuilder = <span class="keyword">new</span> StringBuilder();
+
+            dropTableStringBuilder.<span class="built_in">append</span>(<span class="string">"DROP TABLE "</span>).<span class="built_in">append</span>(tempTableName);
+
+            db.execSQL(insertTableStringBuilder.toString());
+            db.execSQL(dropTableStringBuilder.toString());
+        }
+    }
+
+    <span class="keyword">private</span> <span class="keyword">String</span> getTypeByClass(Class&lt;?&gt; type) <span class="keyword">throws</span> Exception {
+        <span class="keyword">if</span>(type.equals(<span class="keyword">String</span>.class)) {
+            <span class="keyword">return</span> <span class="string">"TEXT"</span>;
+        }
+        <span class="keyword">if</span>(type.equals(Long.class) || type.equals(Integer.class) || type.equals(<span class="keyword">long</span>.class)) {
+            <span class="keyword">return</span> <span class="string">"INTEGER"</span>;
+        }
+        <span class="keyword">if</span>(type.equals(Boolean.class)) {
+            <span class="keyword">return</span> <span class="string">"BOOLEAN"</span>;
+        }
+
+        Exception exception = <span class="keyword">new</span> Exception(CONVERSION_CLASS_NOT_FOUND_EXCEPTION.<span class="built_in">concat</span>(<span class="string">" - Class: "</span>).<span class="built_in">concat</span>(type.toString()));
+        Log.e(<span class="string">"MigrationHelper"</span>,exception.toString());
+        <span class="keyword">throw</span> exception;
+    }
+
+    <span class="keyword">private</span> <span class="keyword">static</span> List&lt;<span class="keyword">String</span>&gt; getColumns(SQLiteDatabase db, <span class="keyword">String</span> tableName) {
+        List&lt;<span class="keyword">String</span>&gt; columns = <span class="keyword">new</span> ArrayList&lt;&gt;();
+        Cursor <span class="built_in">cursor</span> = <span class="keyword">null</span>;
+        <span class="keyword">try</span> {
+            <span class="built_in">cursor</span> = db.rawQuery(<span class="string">"SELECT * FROM "</span> + tableName + <span class="string">" limit 1"</span>, <span class="keyword">null</span>);
+            <span class="keyword">if</span> (<span class="built_in">cursor</span> != <span class="keyword">null</span>) {
+                columns = <span class="keyword">new</span> ArrayList&lt;&gt;(Arrays.asList(<span class="built_in">cursor</span>.getColumnNames()));
+            }
+        } <span class="keyword">catch</span> (Exception e) {
+            Log.v(tableName, e.getMessage(), e);
+            e.printStackTrace();
+        } <span class="keyword">finally</span> {
+            <span class="keyword">if</span> (<span class="built_in">cursor</span> != <span class="keyword">null</span>)
+                <span class="built_in">cursor</span>.close();
+        }
+        <span class="keyword">return</span> columns;
+    }
+}
+</code></pre></li>
+<li><p>继承 <code>DaoMaster.OpenHelper</code> ，并在OnUpgrade方法里面去调用</p>
+<pre><code>public <span class="class"><span class="keyword">class</span> <span class="title">UpgradeHelper</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">DaoMaster</span>.<span class="title">OpenHelper</span> {</span>
+    public <span class="type">UpgradeHelper</span>(<span class="type">Context</span> context, <span class="type">String</span> name, <span class="type">SQLiteDatabase</span>.<span class="type">CursorFactory</span> factory) {
+        <span class="keyword">super</span>(context, name, factory);
+    }
+
+    <span class="annotation">@Override</span>
+    public void onUpgrade(<span class="type">SQLiteDatabase</span> db, int oldVersion, int newVersion) {
+        <span class="type">Log</span>.i(<span class="string">"greenDAO"</span>, <span class="string">"Upgrading schema from version "</span> + oldVersion + <span class="string">" to "</span> + newVersion + <span class="string">" by migrating all tables data"</span>);
+
+        <span class="type">MigrationHelper</span>.getInstance().migrate(
+                db,
+                <span class="type">CollectEntityDao</span>.<span class="keyword">class</span>
+        );
+    }
+}
+
+`<span class="type">CollectEntityDao</span>.<span class="keyword">class</span>` 是指修改字段后重新生成的<span class="type">Dao</span>，哪个表修改字段了就把哪个表的<span class="type">Dao</span>加到方法的参数里。
+public void migrate(<span class="type">SQLiteDatabase</span> db, <span class="type">Class</span>&lt;? <span class="keyword">extends</span> <span class="type">AbstractDao</span>&lt;?, ?&gt;&gt;... daoClasses) 
+后面的参数传修改字段后的表<span class="type">Dao</span>，有多少个表结构修改了就传多少个参数
+</code></pre></li>
+</ol>
+<p><a href="https://github.com/greenrobot/greenDAO/issues/60" target="_blank" rel="external">About update database #60</a></p>
+<p><a href="http://blog.csdn.net/fancylovejava/article/details/46713445" target="_blank" rel="external">GreenDAO数据库版本升级</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/03/08/greedao升级问题：表被删除处理/" data-id="cilj7iyly000ffgjw1dpnii7b" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-65535拆包处理-总结自《其实你不知道MultiDex到底有多坑》" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/03/08/65535拆包处理-总结自《其实你不知道MultiDex到底有多坑》/" class="article-date">
+  <time datetime="2016-03-08T09:10:03.740Z" itemprop="datePublished">2016-03-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>#65535拆包处理-总结自《其实你不知道MultiDex到底有多坑》</p>
+<p><a href="http://blog.zongwu233.com/the-touble-of-multidex/" target="_blank" rel="external">65535拆包处理：其实你不知道MultiDex到底有多坑</a></p>
+<pre><code>不限制 Application ，Activity ，Service ，Receiver ，ContentProvider 继续新增业务
+</code></pre><p>流程图如下</p>
+<p><img src="http://7xn3gz.com1.z0.glb.clouddn.com/image/github/zongwu233multiDex-process.png" alt=""></p>
+<ol>
+<li><p>在主项目的gradle脚本里写上：</p>
+<pre><code>android {
+    compileSdkVersion <span class="number">21</span>
+    buildToolsVersion <span class="string">"21.1.0"</span>
+    defaultConfig {
+        <span class="attribute">...</span>
+        minSdkVersion <span class="number">14</span>
+        targetSdkVersion <span class="number">21</span>
+        <span class="attribute">...</span>
+        <span class="comment">// Enabling multidex support.</span>
+        multiDexEnabled <span class="literal">true</span>
+    }
+    <span class="attribute">...</span>
+}
+dependencies {
+compile <span class="string">'com.android.support:multidex:1.0.1'</span>
+}
+</code></pre></li>
+<li><p>在Application里面(这里不要再继承自MultiApplication了，我们要手动加载Dex):</p>
+<pre><code><span class="keyword">import</span> java.util.Map;
+<span class="keyword">import</span> java.util.jar.Attributes;
+<span class="keyword">import</span> java.util.jar.JarFile;
+<span class="keyword">import</span> java.util.jar.Manifest;
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">App</span> <span class="keyword">extends</span> <span class="title">Application</span> </span>{
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String KEY_DEX2_SHA1 = <span class="string">"dex2-SHA1-Digest"</span>;
+    <span class="annotation">@Override</span>
+    <span class="keyword">protected</span> <span class="function"><span class="keyword">void</span> <span class="title">attachBaseContext</span><span class="params">(Context base)</span> </span>{
+        <span class="keyword">super</span> .attachBaseContext(base);
+        LogUtils.d( <span class="string">"loadDex"</span>, <span class="string">"App attachBaseContext "</span>);
+        <span class="keyword">if</span> (!quickStart() &amp;&amp; Build.VERSION.SDK_INT &lt; Build.VERSION_CODES.LOLLIPOP) {<span class="comment">//&gt;=5.0的系统默认对dex进行oat优化</span>
+            <span class="keyword">if</span> (needWait(base)){
+                waitForDexopt(base);
+            }
+            MultiDex.install (<span class="keyword">this</span> );
+        } <span class="keyword">else</span> {
+            <span class="keyword">return</span>;
+        }
+    }
+    <span class="annotation">@Override</span>
+    <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">onCreate</span><span class="params">()</span> </span>{
+        <span class="keyword">super</span> .onCreate();
+        <span class="keyword">if</span> (quickStart()) {
+            <span class="keyword">return</span>;
+        }
+        ...
+    }
+    <span class="keyword">public</span> <span class="function"><span class="keyword">boolean</span> <span class="title">quickStart</span><span class="params">()</span> </span>{
+        <span class="keyword">if</span> (getCurProcessName(<span class="keyword">this</span>).contains(<span class="string">":mini"</span>)) {
+            LogUtils.d( <span class="string">"loadDex"</span>, <span class="string">":mini start!"</span>);
+            <span class="keyword">return</span> <span class="keyword">true</span>;
+        }
+        <span class="keyword">return</span> <span class="keyword">false</span> ;
+    }
+    <span class="comment">//neead wait for dexopt ?</span>
+    <span class="keyword">private</span> <span class="function"><span class="keyword">boolean</span> <span class="title">needWait</span><span class="params">(Context context)</span></span>{
+        String flag = get2thDexSHA1(context);
+        LogUtils.d( <span class="string">"loadDex"</span>, <span class="string">"dex2-sha1 "</span>+flag);
+        SharedPreferences sp = context.getSharedPreferences(
+                PackageUtil.getPackageInfo(context). versionName, MODE_MULTI_PROCESS);
+        String saveValue = sp.getString(KEY_DEX2_SHA1, <span class="string">""</span>);
+        <span class="keyword">return</span> !flag.equals(saveValue);
+    }
+    <span class="comment">/**
+     * Get classes.dex file signature
+     * <span class="doctag">@param</span> context
+     * <span class="doctag">@return</span>
+     */</span>
+    <span class="keyword">private</span> <span class="function">String <span class="title">get2thDexSHA1</span><span class="params">(Context context)</span> </span>{
+        ApplicationInfo ai = context.getApplicationInfo();
+        String source = ai.sourceDir;
+        <span class="keyword">try</span> {
+            JarFile jar = <span class="keyword">new</span> JarFile(source);
+            Manifest mf = jar.getManifest();
+            Map&lt;String, Attributes&gt; map = mf.getEntries();
+            Attributes a = map.get(<span class="string">"classes2.dex"</span>);
+            <span class="function"><span class="keyword">return</span> a.<span class="title">getValue</span><span class="params">(<span class="string">"SHA1-Digest"</span>)</span></span>;
+        } <span class="keyword">catch</span> (Exception e) {
+            e.printStackTrace();
+        }
+        <span class="keyword">return</span> <span class="keyword">null</span> ;
+    }
+    <span class="comment">// optDex finish </span>
+    <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">installFinish</span><span class="params">(Context context)</span></span>{
+        SharedPreferences sp = context.getSharedPreferences(
+                PackageUtil.getPackageInfo(context).versionName, MODE_MULTI_PROCESS);
+        sp.edit().putString(KEY_DEX2_SHA1,get2thDexSHA1(context)).commit();
+    }
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function">String <span class="title">getCurProcessName</span><span class="params">(Context context)</span> </span>{
+        <span class="keyword">try</span> {
+            <span class="keyword">int</span> pid = android.os.Process.myPid();
+            ActivityManager mActivityManager = (ActivityManager) context
+                    .getSystemService(Context. ACTIVITY_SERVICE);
+            <span class="keyword">for</span> (ActivityManager.RunningAppProcessInfo appProcess : mActivityManager
+                    .getRunningAppProcesses()) {
+                <span class="keyword">if</span> (appProcess.pid == pid) {
+                    <span class="keyword">return</span> appProcess. processName;
+                }
+            }
+        } <span class="keyword">catch</span> (Exception e) {
+            <span class="comment">// ignore</span>
+        }
+        <span class="keyword">return</span> <span class="keyword">null</span> ;
+    }
+    <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">waitForDexopt</span><span class="params">(Context base)</span> </span>{
+        Intent intent = <span class="keyword">new</span> Intent();
+        ComponentName componentName = <span class="keyword">new</span>
+                ComponentName( <span class="string">"com.zongwu"</span>, LoadResActivity.class.getName());
+        intent.setComponent(componentName);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        base.startActivity(intent);
+        <span class="keyword">long</span> startWait = System.currentTimeMillis ();
+        <span class="keyword">long</span> waitTime = <span class="number">10</span> * <span class="number">1000</span> ;
+        <span class="keyword">if</span> (Build.VERSION.SDK_INT &lt; Build.VERSION_CODES.HONEYCOMB_MR1 ) {
+            waitTime = <span class="number">20</span> * <span class="number">1000</span> ;<span class="comment">//实测发现某些场景下有些2.3版本有可能10s都不能完成optdex</span>
+        }
+        <span class="keyword">while</span> (needWait(base)) {
+            <span class="keyword">try</span> {
+                <span class="keyword">long</span> nowWait = System.currentTimeMillis() - startWait;
+                LogUtils.d(<span class="string">"loadDex"</span> , <span class="string">"wait ms :"</span> + nowWait);
+                <span class="keyword">if</span> (nowWait &gt;= waitTime) {
+                    <span class="keyword">return</span>;
+                }
+                Thread.sleep(<span class="number">200</span> );
+            } <span class="keyword">catch</span> (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
+</code></pre></li>
+<li><p>PackageUtil的方法</p>
+<pre><code><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> PackageInfo <span class="title">getPackageInfo</span><span class="params">(Context context)</span></span>{
+       PackageManager pm = context.getPackageManager();
+       <span class="keyword">try</span> {
+           <span class="keyword">return</span> pm.getPackageInfo(context.getPackageName(), <span class="number">0</span>);
+       } <span class="keyword">catch</span> (PackageManager.NameNotFoundException e) {
+           LogUtils.e(e.getLocalizedMessage());
+       }
+       <span class="keyword">return</span>  <span class="keyword">new</span> PackageInfo();
+   }
+</code></pre></li>
+<li><p>LoadResActivity</p>
+<pre><code>public <span class="class"><span class="keyword">class</span> <span class="title">LoadResActivity</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">Activity</span> {</span>
+    <span class="annotation">@Override</span>
+    public void onCreate(<span class="type">Bundle</span> savedInstanceState) {
+        requestWindowFeature(<span class="type">Window</span>.<span class="type">FEATURE_NO_TITLE</span>);
+        <span class="keyword">super</span> .onCreate(savedInstanceState);
+        getWindow().setFlags(<span class="type">WindowManager</span>.<span class="type">LayoutParams</span>.<span class="type">FLAG_FULLSCREEN</span> , <span class="type">WindowManager</span>.<span class="type">LayoutParams</span>.<span class="type">FLAG_FULLSCREEN</span> );
+        overridePendingTransition(<span class="type">R</span>.anim.null_anim, <span class="type">R</span>.anim.null_anim);
+        setContentView(<span class="type">R</span>.layout.layout_load);      
+        <span class="keyword">new</span> <span class="type">LoadDexTask</span>().execute();
+    }
+    <span class="class"><span class="keyword">class</span> <span class="title">LoadDexTask</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">AsyncTask</span> {</span>
+        <span class="annotation">@Override</span>
+        <span class="keyword">protected</span> <span class="type">Object</span> doInBackground(<span class="type">Object</span>[] params) {
+            <span class="keyword">try</span> {
+                <span class="type">MultiDex</span>.install(getApplication());
+                <span class="type">LogUtils</span>.d(<span class="string">"loadDex"</span> , <span class="string">"install finish"</span> );
+                ((<span class="type">App</span>) getApplication()).installFinish(getApplication());
+            } <span class="keyword">catch</span> (<span class="type">Exception</span> e) {
+                <span class="type">LogUtils</span>.e(<span class="string">"loadDex"</span> , e.getLocalizedMessage());
+            }
+            <span class="keyword">return</span> <span class="literal">null</span>;
+        }
+        <span class="annotation">@Override</span>
+        <span class="keyword">protected</span> void onPostExecute(<span class="type">Object</span> o) {
+            <span class="type">LogUtils</span>.d( <span class="string">"loadDex"</span>, <span class="string">"get install finish"</span>);
+            finish();
+            <span class="type">System</span>.exit( <span class="number">0</span>);
+        }
+    }
+    <span class="annotation">@Override</span>
+    public void onBackPressed() {
+        <span class="comment">//cannot backpress</span>
+    }
+</code></pre></li>
+<li><p>Manifest.xml 里面 </p>
+<pre><code>&lt;activity
+    android:<span class="property">name</span>= <span class="string">"com.zongwu.LoadResActivity"</span>
+    android:launchMode= <span class="string">"singleTask"</span>
+    android:process= <span class="string">":mini"</span>
+    android:alwaysRetainTaskState= <span class="string">"false"</span>
+    android:excludeFromRecents= <span class="string">"true"</span>
+    android:screenOrientation= <span class="string">"portrait"</span> /&gt;
+&lt;activity
+    android:<span class="property">name</span>= <span class="string">"com.zongwu.WelcomeActivity"</span>
+    android:launchMode= <span class="string">"singleTop"</span>
+    android:screenOrientation= <span class="string">"portrait"</span>&gt;
+    &lt;intent-filter &gt;
+        &lt;action android:<span class="property">name</span>=<span class="string">"android.intent.action.MAIN"</span>/&gt;
+        &lt;category android:<span class="property">name</span>=<span class="string">"android.intent.category.LAUNCHER"</span>/&gt;
+    &lt;/intent-filter &gt;
+&lt;/activity&gt;
+</code></pre></li>
+<li><p>替换Activity默认的出现动画 R.anim.null_anim 文件的定义：</p>
+<pre><code><span class="tag">&lt;<span class="title">set</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">alpha</span>
+        <span class="attribute">android:fromAlpha</span>=<span class="value">"1.0"</span>
+        <span class="attribute">android:toAlpha</span>=<span class="value">"1.0"</span>
+        <span class="attribute">android:duration</span>=<span class="value">"550"</span>/&gt;</span>
+<span class="tag">&lt;/<span class="title">set</span>&gt;</span>
+</code></pre></li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/03/08/65535拆包处理-总结自《其实你不知道MultiDex到底有多坑》/" data-id="cilj7iykh0000fgjw6gqzyo7s" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-webview引入html片段乱码" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/01/11/webview引入html片段乱码/" class="article-date">
+  <time datetime="2016-01-11T08:21:00.885Z" itemprop="datePublished">2016-01-11</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/01/11/webview引入html片段乱码/">webview引入html片段乱码</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>使用 loadData方法是中文部分会出现乱码，即使指定“utf-8”、“gbk”、“gb2312”也一样。</p>
+<pre><code>webView<span class="built_in">.</span>getSettings()<span class="built_in">.</span>setDefaultTextEncodingName(<span class="string">"UTF -8"</span>);<span class="comment">//设置默认为utf-8</span>
+<span class="comment">// webView.loadData(data, "text/html", "UTF -8");//API提供的标准用法，无法解决乱码问题</span>
+webView<span class="built_in">.</span>loadData(<span class="built_in">data</span>, <span class="string">"text/html; charset=UTF-8"</span>, <span class="built_in">null</span>);<span class="comment">//这种写法可以正确解码</span>
+</code></pre><p>或者考虑使用 loadDataWithBaseURL方法</p>
+<p>参考文章：<a href="http://wj495175289.blog.163.com/blog/static/1620826662012364512840/" target="_blank" rel="external">http://wj495175289.blog.163.com/blog/static/1620826662012364512840/</a></p>
+<ul>
+<li><a href="http://www.cnblogs.com/lipeil/archive/2012/08/18/2645409.html" target="_blank" rel="external">webView loadData 中文乱码问题</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/01/11/webview引入html片段乱码/" data-id="cilj7iylj000cfgjwfp28bjhq" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-MultiStateView加载框架学习" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2016/01/01/MultiStateView加载框架学习/" class="article-date">
@@ -134,7 +670,7 @@ mMultiStateView.getView(MultiStateView.VIEW_STATE_ERROR).findViewById(R.id.retry
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/01/01/MultiStateView加载框架学习/" data-id="ciizgj7t5000hcojw7z1hh4bg" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/01/01/MultiStateView加载框架学习/" data-id="cilj7iymf000kfgjw4b2d9up0" class="article-share-link">Share</a>
       
       
     </footer>
@@ -182,7 +718,7 @@ mMultiStateView.getView(MultiStateView.VIEW_STATE_ERROR).findViewById(R.id.retry
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/12/30/找不到org.apache.http/" data-id="ciizgj7sh0009cojw2r62ivix" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/12/30/找不到org.apache.http/" data-id="cilj7iyle000afgjw82iaopu6" class="article-share-link">Share</a>
       
       
     </footer>
@@ -224,7 +760,7 @@ mMultiStateView.getView(MultiStateView.VIEW_STATE_ERROR).findViewById(R.id.retry
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/12/03/RxJava学习/" data-id="ciizgj7t1000gcojwgee7lw1e" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/12/03/RxJava学习/" data-id="cilj7iymd000jfgjw9v1cbp33" class="article-share-link">Share</a>
       
       
     </footer>
@@ -256,7 +792,7 @@ mMultiStateView.getView(MultiStateView.VIEW_STATE_ERROR).findViewById(R.id.retry
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/11/12/adupwardSDK反编译接入方法/" data-id="ciizgj7sv000ecojwsj1gdzby" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/11/12/adupwardSDK反编译接入方法/" data-id="cilj7iym4000hfgjwsqrhofs6" class="article-share-link">Share</a>
       
       
     </footer>
@@ -302,7 +838,7 @@ E:\Android\adt-bundle-windows-x86-<span class="number">20140702</span>\sdk\build
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/11/11/Apk 动态加载jar/" data-id="ciizgj7bx0000cojw2r40t5cq" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/11/11/Apk 动态加载jar/" data-id="cilj7iymk000mfgjwlvzop30k" class="article-share-link">Share</a>
       
       
     </footer>
@@ -374,265 +910,7 @@ http:<span class="comment">//jiagu.360.cn/1101144936.php?dtid=1101144931&amp;did
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/11/11/二次打包：apk加入自己的sdk包/" data-id="ciizgj7sl000acojwk0fww6o4" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-SQLite使用中遇到的坑" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/11/10/SQLite使用中遇到的坑/" class="article-date">
-  <time datetime="2015-11-10T14:53:45.013Z" itemprop="datePublished">2015-11-10</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/11/10/SQLite使用中遇到的坑/">SQLite 和 greenDAO 使用中遇到的坑</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <pre><code><span class="title">SQLite</span> 因为是个精简的数据库，所以会缺省了一些方法
-</code></pre><h2 id="SQLite_没法修改列名">SQLite 没法修改列名</h2><p>所以要修改列名的话，还是直接新建一个列吧。</p>
-<h2 id="SQLite_没有datediff日期时间相减的方法">SQLite 没有datediff日期时间相减的方法</h2><p>如果要实现日期相减的话，那就用sqlite里有个julianday函数转化后可以直接相减,得到的结果是以天(day)为单位数值，如果不足一天会以小数表示。</p>
-<h2 id="greenDAO_–_SQLite_开源操作框架-遇到的坑">greenDAO – SQLite 开源操作框架-遇到的坑</h2><p>greenDAO 的确是很好用,但在我自己做项目 <a href="http://www.wandoujia.com/apps/com.qichengshike.qichengzhongzhuan" target="_blank" rel="external">【启程中转】</a> 时,还是遇到了坑<br>介绍一下这项目 <a href="http://www.wandoujia.com/apps/com.qichengshike.qichengzhongzhuan" target="_blank" rel="external">【启程中转】</a> ,这app只为一个需求:    </p>
-<ul>
-<li>查询12306的中转车票</li>
-</ul>
-<h3 id="坑1–没有同表联查">坑1–没有同表联查</h3><p>我创了个数据库,里面的只有一张表: <code>QUERY_ENTITY</code><br>结构为:</p>
-<p>public class QueryEntity</p>
-<pre><code><span class="keyword">private</span> Long id;<span class="comment">//这是ID</span>
-<span class="keyword">private</span> <span class="keyword">String</span> from_station;<span class="comment">//出发地点</span>
-<span class="keyword">private</span> <span class="keyword">String</span> to_station;<span class="comment">//到达地点</span>
-<span class="keyword">private</span> <span class="keyword">String</span> position;<span class="comment">//排行第几次车,用于区分车次</span>
-</code></pre><p>中转说明:</p>
-<pre><code>上一次的列车的到达地点(to_station)与下一次的列车的出发地点(from_station)是同一个地点,如:
-position=<span class="number">1</span>的列车的到达地点(to_station)与position=<span class="number">2</span>的列车的出发地点(from_station)相同
-</code></pre><p>这种要对比的数据处于同一个表的情况, greendao 支持使用原生 sql 来查询,但并不是很好的, 开始我这样查的: </p>
-<pre><code>String tempSQL = "<span class="operator"><span class="keyword">SELECT</span> QUERY002.FROM_STATION <span class="keyword">FROM</span> <span class="string">"
-    + "</span>(<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> QUERY_ENTITY <span class="keyword">WHERE</span> <span class="keyword">POSITION</span> = <span class="string">'1'</span>) QUERY001 <span class="keyword">JOIN</span> <span class="string">"
-    + "</span>(<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> QUERY_ENTITY <span class="keyword">WHERE</span> <span class="keyword">POSITION</span> =<span class="string">'2'</span>) QUERY002 <span class="string">"
-    + "</span><span class="keyword">WHERE</span> QUERY001.TO_STATION = QUERY002.FROM_STATION )<span class="string">";
-
-Query&lt;QueryEntity&gt; query = mQueryEntityDao.queryBuilder().where(new StringCondition("</span><span class="keyword">POSITION</span> = <span class="string">'1'</span> <span class="keyword">AND</span> TO_STATION = <span class="string">" + "</span>( <span class="string">" +tempSQL+"</span> )<span class="string">")).build();</span></span>
-</code></pre><p>这样看起来是对的,也查出了 <code>POSITION = &#39;1&#39;</code> 的列车有多少个,但因为 <code>POSITION = &#39;1&#39;</code> 和 <code>POSITION = &#39;2&#39;</code> 的数量是不一定相同的。<br>而现在只是查询出来了不重复的 <code>POSITION = &#39;1&#39;</code> 的列车有多少个<br>只要执行了 tempSQL 就可以得到正确的列车数据了,而在使用 greendao 的mQueryEntityDao.queryBuilder().where()还是要再一次比较<br>我也看了 greendao 的 join 接口, 但这好像是针对不同表的,而且在网上的中文资料也是很少,到后来也没用上,如有资料的,请指导一下        </p>
-<p>后来我还是使用了以前的写法:</p>
-<p>public static List<queryentity> getRawQueryList(SQLiteDatabase mDb, String queryStr, int position)</queryentity></p>
-<pre><code>String tempSQL = "<span class="operator"><span class="keyword">SELECT</span> QUERY001.* <span class="keyword">FROM</span> <span class="string">"
-    + "</span>(<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> QUERY_ENTITY <span class="keyword">WHERE</span> <span class="keyword">POSITION</span> = <span class="string">'1'</span>) QUERY001 <span class="keyword">JOIN</span> <span class="string">"
-    + "</span>(<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> QUERY_ENTITY <span class="keyword">WHERE</span> <span class="keyword">POSITION</span> =<span class="string">'2'</span>) QUERY002 <span class="string">"
-    + "</span><span class="keyword">WHERE</span> QUERY001.TO_STATION = QUERY002.FROM_STATION )<span class="string">";
-Cursor mCursor = mDb.rawQuery(sql, null);</span></span>
-</code></pre><h2 id="坑2–SQLite_中,Cursor-getColumnIndex(String)不支持:”表名-列名”">坑2–SQLite 中,Cursor.getColumnIndex(String)不支持:”表名.列名”</h2><p>这个本来是放上面的,但在这讲会更容易理解。   </p>
-<p>mCursor.getColumnNames()中的数据是这样的:</p>
-<pre><code><span class="number">0</span> = {HashMap<span class="variable">$HashMapEntry</span>@<span class="number">4557</span>} <span class="string">"QUERY001.FROM_STATION"</span> -&gt; <span class="string">"0"</span>
-<span class="number">1</span> = {HashMap<span class="variable">$HashMapEntry</span>@<span class="number">4560</span>} <span class="string">"QUERY001.TO_STATION"</span> -&gt; <span class="string">"1"</span>
-</code></pre><p>然后这样执行:</p>
-<pre><code><span class="keyword">while</span> (mCursor.moveToNext()) {
-    <span class="keyword">try</span> {
-        <span class="built_in">int</span> i = mCursor.getColumnIndex(<span class="string">"QUERY001.FROM_STATION"</span>);
-        <span class="keyword">String</span>[] temp= mCursor.getColumnNames();
-
-        <span class="keyword">String</span> s1 = mCursor.getString(<span class="number">0</span>);
-        <span class="keyword">String</span> s2 = mCursor.getString(mCursor.getColumnIndex(temp[<span class="number">0</span>]));
-        System.out.<span class="built_in">println</span>(i + s2 + <span class="string">""</span>);
-    } <span class="keyword">catch</span> (Exception e) {
-        e.printStackTrace();
-    }
-}
-</code></pre><p>执行到 String s2 = mCursor.getString(mCursor.getColumnIndex(temp[0])); 就报错了<br>所以我就直接根据 mCursor.getColumnNames()排序来获得指定的数据了</p>
-<hr>
-<h3 id="参考资料">参考资料</h3><p><a href="http://blog.csdn.net/raykenio/article/details/7026691" target="_blank" rel="external">SQLite时间/日期函数</a><br><a href="http://www.bubuko.com/infodetail-1000541.html" target="_blank" rel="external">【转】实现Sqlite datediff日期时间相减的方法</a><br><a href="http://greendao-orm.com/" target="_blank" rel="external"> greendao 官网 </a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/11/10/SQLite使用中遇到的坑/" data-id="ciizgj7sx000fcojwgwlw2qag" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-untiy/2d/game/2d-game-00-开始" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/11/09/untiy/2d/game/2d-game-00-开始/" class="article-date">
-  <time datetime="2015-11-09T14:55:16.503Z" itemprop="datePublished">2015-11-09</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/11/09/untiy/2d/game/2d-game-00-开始/">2d-game-00-开始</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="下载">下载</h2><h3 id="国外apk测试病毒网站">国外apk测试病毒网站</h3><pre><code><span class="string">https:</span><span class="comment">//www.virustotal.com</span>
-</code></pre><h3 id="手机上测试">手机上测试</h3><p>百度卫士、360卫士、手机管家、卡巴斯基</p>
-<h2 id="报毒处理">报毒处理</h2><p>使用360加固或爱加密加固后再测试，如果没有问题就行了</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/11/09/untiy/2d/game/2d-game-00-开始/" data-id="ciizgj7sn000bcojwh0f71c8f" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-apk测试与处理" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/10/10/apk测试与处理/" class="article-date">
-  <time datetime="2015-10-10T03:33:11.340Z" itemprop="datePublished">2015-10-10</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/10/10/apk测试与处理/">apk测试与处理</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="测试">测试</h2><h3 id="国外apk测试病毒网站">国外apk测试病毒网站</h3><pre><code><span class="string">https:</span><span class="comment">//www.virustotal.com</span>
-</code></pre><h3 id="手机上测试">手机上测试</h3><p>百度卫士、360卫士、手机管家、卡巴斯基</p>
-<h2 id="报毒处理">报毒处理</h2><p>使用360加固或爱加密加固后再测试，如果没有问题就行了</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/10/10/apk测试与处理/" data-id="ciizgj7ss000dcojw5v1ivhm1" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Hexo安装记录" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/09/14/Hexo安装记录/" class="article-date">
-  <time datetime="2015-09-14T09:52:48.833Z" itemprop="datePublished">2015-09-14</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/09/14/Hexo安装记录/">Hexo安装记录</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="经历">经历</h2><p>安装Hexo的过程中走了不弯路，所以就自己写个记录，以示他人</p>
-<h2 id="环境">环境</h2><h3 id="git:">git:</h3><p><a href="https://desktop.github.com/" target="_blank" rel="external">GitHub Windows</a>,你懂的</p>
-<p><a href="https://git-scm.com/" target="_blank" rel="external">git</a>,这个没被墙</p>
-<h3 id="Node-JS:">Node.JS:</h3><p><a href="http://nodejs.org/" target="_blank" rel="external">Node.JS</a>     </p>
-<h4 id="注意_安装完成后添加Path环境变量，使npm命令生效">注意 安装完成后添加Path环境变量，使<code>npm</code>命令生效</h4><h3 id="安装Hexo">安装Hexo</h3><pre><code>1 npm <span class="operator"><span class="keyword">install</span> -<span class="keyword">g</span> hexo-cli 
-<span class="number">2</span> npm <span class="keyword">install</span> hexo <span class="comment">--save </span></span>
-</code></pre><p>有时可能会报错：hexo不是命令。这时，只要把在安装 <code>npm install hexo --save</code>的node_modules\.bin加入环境变量，再重新打开命令行即可（注！这很重要，因为命令行不会刷新！）。<br>如：D:\nodejspojo\hexo\node_modules.bin<br><a href="https://hexo.io/zh-cn/docs/index.html#安装" target="_blank" rel="external">https://hexo.io/zh-cn/docs/index.html#安装</a>     </p>
-<h2 id="Hexo初始化配置">Hexo初始化配置</h2><h3 id="创建Hexo文件夹">创建Hexo文件夹</h3><p>安装完成后，根据自己喜好建立目录（如<code>D:\nodejspojo\hexo</code>），进入Git Bash切换到该路径下<code>D:\nodejspojo\hexo</code>执行以下指令</p>
-<pre><code><span class="title">hexo</span> init
-</code></pre><h3 id="安装Hexo插件">安装Hexo插件</h3><pre><code>npm <span class="keyword">install</span>
-</code></pre><p>这样装会漏掉部分插件,如:        </p>
-<p>hexo-deployer-git</p>
-<pre><code>npm <span class="operator"><span class="keyword">install</span> hexo-deployer-git <span class="comment">--save</span></span>
-</code></pre><p>详细插件的安装:</p>
-<pre><code>npm <span class="operator"><span class="keyword">install</span> hexo-generator-<span class="keyword">index</span> <span class="comment">--save</span>
-npm <span class="keyword">install</span> hexo-generator-<span class="keyword">archive</span> <span class="comment">--save</span>
-npm <span class="keyword">install</span> hexo-generator-<span class="keyword">category</span> <span class="comment">--save</span>
-npm <span class="keyword">install</span> hexo-generator-tag <span class="comment">--save</span>
-npm <span class="keyword">install</span> hexo-<span class="keyword">server</span> <span class="comment">--save</span>
-npm <span class="keyword">install</span> hexo-deployer-git <span class="comment">--save</span>
-npm <span class="keyword">install</span> hexo-deployer-heroku <span class="comment">--save</span>
-npm <span class="keyword">install</span> hexo-deployer-rsync <span class="comment">--save</span>
-npm <span class="keyword">install</span> hexo-deployer-openshift <span class="comment">--save</span>
-npm <span class="keyword">install</span> hexo-renderer-marked@<span class="number">0.2</span> <span class="comment">--save</span>
-npm <span class="keyword">install</span> hexo-renderer-stylus@<span class="number">0.2</span> <span class="comment">--save</span>
-npm <span class="keyword">install</span> hexo-generator-feed@<span class="number">1</span> <span class="comment">--save</span>
-npm <span class="keyword">install</span> hexo-generator-sitemap@<span class="number">1</span> <span class="comment">--save</span></span>
-</code></pre><h3 id="本地查看效果">本地查看效果</h3><p>继续执行以下命令，成功后可登录<code>localhost:4000</code>查看效果   </p>
-<pre><code>hexo <span class="keyword">server</span>
-</code></pre><h3 id="Hexo简写命令">Hexo简写命令</h3><pre><code><span class="title">hexo</span> n <span class="comment">#new</span>
-hexo g <span class="comment">#generate</span>
-hexo s <span class="comment">#server</span>
-</code></pre><h2 id="部署静态网页到GitHub">部署静态网页到GitHub</h2><h3 id="注册设置GitHub">注册设置GitHub</h3><p>-登录<a href="https://github.com/" target="_blank" rel="external">GitHub</a>，注册自定义用户名如wsgzao<br>-在主页右上角创建<code>New repository</code>，name必须和用户名一致如<code>wsgzao.github.io</code><br>-现在创建并没有静态主页。<s>首次创建耐心等待10分钟左右审核，之后即可访问静态主页如<code>http://wsgzao.github.io</code></s></p>
-<h3 id="同步内容至GitHub">同步内容至GitHub</h3><p>部署到Github前需要配置<code>_config.yml</code>文件    </p>
-<h4 id="Git">Git</h4><p>安装 hexo-deployer-git。<br>    npm install hexo-deployer-git –save<br>修改配置。</p>
-<pre><code>deploy:
-  type: git
-  repo: <span class="variable">&lt;repository url&gt;</span>
-  branch: [branch]
-  message: [message]
-
-
-|<span class="string">参数       </span>|<span class="string">描述                                                          </span>|
-|<span class="string">-----------</span>|<span class="string">------------------------------------------------------------:</span>|<span class="string">     
-</span>|<span class="string">repo       </span>|<span class="string">库（Repository）地址                                            </span>|
-|<span class="string">branch     </span>|<span class="string">分支名称。如果您使用的是 GitHub 或 GitCafe 的话，程序会尝试自动检测 </span>|
-|<span class="string">message    </span>|<span class="string">自定提交信息                                                   </span>|
-</code></pre><p><a href="https://hexo.io/zh-cn/docs/deployment.html" target="_blank" rel="external">https://hexo.io/zh-cn/docs/deployment.html</a></p>
-<p>之后在<code>Git</code>命令框(Git Bash)下，执行下列指令即可完成部署，注意部署会覆盖掉你之前在版本库中存放的文件。</p>
-<pre><code><span class="number">1</span> hexo clean
-<span class="number">2</span> hexo generate
-<span class="number">3</span> hexo deploy
-</code></pre><h3 id="注意">注意</h3><ul>
-<li>只要执行了<code>hexo deploy</code>,那么它就会将<code>hexo generate</code>所产生的public文件夹内容部署上<code>_config.yml</code>文件设置的Git地址了,成功的你就可以到你的主页上看到了。而当前文件夹的内容是不用提交上Git,否则你每次提交都只是当前文件夹的内容,不要问我怎样知道的···</li>
-</ul>
-<h2 id="最后">最后</h2><h3 id="Md语法与编辑器">Md语法与编辑器</h3><p><a href="https://pandao.github.io/editor.md/" target="_blank" rel="external">editor.md</a></p>
-<h2 id="参考文章:">参考文章:</h2><p><a href="http://yangjian.me/workspace/building-blog-with-hexo/" target="_blank" rel="external">使用hexo搭建博客</a><br><a href="http://wsgzao.github.io/post/hexo-guide/" target="_blank" rel="external">使用GitHub和Hexo搭建免费静态Blog</a><br><a href="http://baurine.github.io/2015/05/10/hexo_git/" target="_blank" rel="external">将原始的 .md 文件纳入 hexo 的版本管理</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/09/14/Hexo安装记录/" data-id="ciizgj7t8000icojw1suj8hza" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/11/11/二次打包：apk加入自己的sdk包/" data-id="cilj7iylg000bfgjwgdgqkjef" class="article-share-link">Share</a>
       
       
     </footer>
@@ -661,7 +939,7 @@ hexo s <span class="comment">#server</span>
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">September 2015</a><span class="archive-list-count">2</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">September 2015</a><span class="archive-list-count">2</span></li></ul>
     </div>
   </div>
 
@@ -673,23 +951,23 @@ hexo s <span class="comment">#server</span>
       <ul>
         
           <li>
+            <a href="/2016/03/08/重复引用-Duplicate files copied in APK/">重复引用错误-Duplicate files copied in APK</a>
+          </li>
+        
+          <li>
+            <a href="/2016/03/08/greedao升级问题：表被删除处理/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2016/03/08/65535拆包处理-总结自《其实你不知道MultiDex到底有多坑》/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2016/01/11/webview引入html片段乱码/">webview引入html片段乱码</a>
+          </li>
+        
+          <li>
             <a href="/2016/01/01/MultiStateView加载框架学习/">MultiStateView加载框架学习</a>
-          </li>
-        
-          <li>
-            <a href="/2015/12/30/找不到org.apache.http/">找不到org.apache.http</a>
-          </li>
-        
-          <li>
-            <a href="/2015/12/03/RxJava学习/">RxJava学习</a>
-          </li>
-        
-          <li>
-            <a href="/2015/11/12/adupwardSDK反编译接入方法/">(no title)</a>
-          </li>
-        
-          <li>
-            <a href="/2015/11/11/Apk 动态加载jar/">Apk 动态加载jar</a>
           </li>
         
       </ul>
