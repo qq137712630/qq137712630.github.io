@@ -61,69 +61,10 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-重复引用-Duplicate files copied in APK" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/03/08/重复引用-Duplicate files copied in APK/" class="article-date">
-  <time datetime="2016-03-08T09:21:11.420Z" itemprop="datePublished">2016-03-08</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/03/08/重复引用-Duplicate files copied in APK/">重复引用错误-Duplicate files copied in APK</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="原因：">原因：</h1><p>在使用umeng推送时出现了这个问题：    </p>
-<pre><code>Duplicate files copied <span class="keyword">in</span> APK META-INF/maven/com<span class="class">.squareup</span><span class="class">.okio</span>/okio/pom.xml
-</code></pre><p>原因是<code>okhttp</code>和 umeng推送 都使用到<code>okio</code></p>
-<h1 id="解决方法：">解决方法：</h1><p>你可以在主项目的build.gradle中添加下面的内容，排除重复的东西：</p>
-<pre><code><span class="xml">android </span><span class="expression">{
-    <span class="variable">....</span>
-
-    <span class="variable">packagingOptions</span> {
-        <span class="variable">exclude</span> '<span class="variable">META-INF</span><span class="end-block">/maven</span><span class="end-block">/com.squareup.okio</span><span class="end-block">/okio</span><span class="end-block">/pom.xml</span>'
-        <span class="variable">exclude</span> '<span class="variable">META-INF</span><span class="end-block">/maven</span><span class="end-block">/com.squareup.okio</span><span class="end-block">/okio</span><span class="end-block">/pom.properties</span>'
-    }</span><span class="xml">
-}</span>
-</code></pre><p>在google的gradle文档中写着：</p>
-<pre><code><span class="label">Configuration</span> <span class="keyword">blocks（配置块）
-</span><span class="label">Listed</span> <span class="keyword">below </span>are the configuration <span class="keyword">blocks </span>available within <span class="keyword">android（下面列出的是在Android的可配置模块）</span>
-</code></pre><p>个人理解为build.gradle中android的内容配置模块：</p>
-<pre><code><span class="tag">android</span> {
-....
-}
-</code></pre><ul>
-<li><a href="http://bbs.umeng.com/thread-12359-1-1.html" target="_blank" rel="external">友盟推送jar文件与okio.jar冲突，看17楼</a></li>
-<li><a href="http://google.github.io/android-gradle-dsl/current/" target="_blank" rel="external">Google的gradle文档</a></li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/03/08/重复引用-Duplicate files copied in APK/" data-id="cilj7sw900009mgjwoeshuriu" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
     <article id="post-greedao升级问题：表被删除处理" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2016/03/08/greedao升级问题：表被删除处理/" class="article-date">
-  <time datetime="2016-03-08T09:12:10.640Z" itemprop="datePublished">2016-03-08</time>
+  <time datetime="2016-03-08T09:49:44.016Z" itemprop="datePublished">2016-03-08</time>
 </a>
     
   </div>
@@ -307,7 +248,7 @@ public void migrate(<span class="type">SQLiteDatabase</span> db, <span class="ty
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/03/08/greedao升级问题：表被删除处理/" data-id="cilj7sw9n000fmgjwyfx11gnt" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/03/08/greedao升级问题：表被删除处理/" data-id="cilj8k285000fk4jwcxcowjzi" class="article-share-link">Share</a>
       
       
     </footer>
@@ -320,7 +261,7 @@ public void migrate(<span class="type">SQLiteDatabase</span> db, <span class="ty
     <article id="post-65535拆包处理-总结自《其实你不知道MultiDex到底有多坑》" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2016/03/08/65535拆包处理-总结自《其实你不知道MultiDex到底有多坑》/" class="article-date">
-  <time datetime="2016-03-08T09:10:03.740Z" itemprop="datePublished">2016-03-08</time>
+  <time datetime="2016-03-08T09:49:39.370Z" itemprop="datePublished">2016-03-08</time>
 </a>
     
   </div>
@@ -329,8 +270,7 @@ public void migrate(<span class="type">SQLiteDatabase</span> db, <span class="ty
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>#65535拆包处理-总结自《其实你不知道MultiDex到底有多坑》</p>
-<p><a href="http://blog.zongwu233.com/the-touble-of-multidex/" target="_blank" rel="external">65535拆包处理：其实你不知道MultiDex到底有多坑</a></p>
+        <h1 id="65535拆包处理-总结自《其实你不知道MultiDex到底有多坑》">65535拆包处理-总结自《其实你不知道MultiDex到底有多坑》</h1><p><a href="http://blog.zongwu233.com/the-touble-of-multidex/" target="_blank" rel="external">65535拆包处理：其实你不知道MultiDex到底有多坑</a></p>
 <pre><code>不限制 Application ，Activity ，Service ，Receiver ，ContentProvider 继续新增业务
 </code></pre><p>流程图如下</p>
 <p><img src="http://7xn3gz.com1.z0.glb.clouddn.com/image/github/zongwu233multiDex-process.png" alt=""></p>
@@ -542,7 +482,66 @@ compile <span class="string">'com.android.support:multidex:1.0.1'</span>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/03/08/65535拆包处理-总结自《其实你不知道MultiDex到底有多坑》/" data-id="cilj7sw880000mgjwqnobv8do" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/03/08/65535拆包处理-总结自《其实你不知道MultiDex到底有多坑》/" data-id="cilj8k26w0000k4jwwrfmf38p" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-重复引用-Duplicate files copied in APK" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/03/08/重复引用-Duplicate files copied in APK/" class="article-date">
+  <time datetime="2016-03-08T09:21:11.420Z" itemprop="datePublished">2016-03-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/03/08/重复引用-Duplicate files copied in APK/">重复引用错误-Duplicate files copied in APK</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="原因：">原因：</h1><p>在使用umeng推送时出现了这个问题：    </p>
+<pre><code>Duplicate files copied <span class="keyword">in</span> APK META-INF/maven/com<span class="class">.squareup</span><span class="class">.okio</span>/okio/pom.xml
+</code></pre><p>原因是<code>okhttp</code>和 umeng推送 都使用到<code>okio</code></p>
+<h1 id="解决方法：">解决方法：</h1><p>你可以在主项目的build.gradle中添加下面的内容，排除重复的东西：</p>
+<pre><code><span class="xml">android </span><span class="expression">{
+    <span class="variable">....</span>
+
+    <span class="variable">packagingOptions</span> {
+        <span class="variable">exclude</span> '<span class="variable">META-INF</span><span class="end-block">/maven</span><span class="end-block">/com.squareup.okio</span><span class="end-block">/okio</span><span class="end-block">/pom.xml</span>'
+        <span class="variable">exclude</span> '<span class="variable">META-INF</span><span class="end-block">/maven</span><span class="end-block">/com.squareup.okio</span><span class="end-block">/okio</span><span class="end-block">/pom.properties</span>'
+    }</span><span class="xml">
+}</span>
+</code></pre><p>在google的gradle文档中写着：</p>
+<pre><code><span class="label">Configuration</span> <span class="keyword">blocks（配置块）
+</span><span class="label">Listed</span> <span class="keyword">below </span>are the configuration <span class="keyword">blocks </span>available within <span class="keyword">android（下面列出的是在Android的可配置模块）</span>
+</code></pre><p>个人理解为build.gradle中android的内容配置模块：</p>
+<pre><code><span class="tag">android</span> {
+....
+}
+</code></pre><ul>
+<li><a href="http://bbs.umeng.com/thread-12359-1-1.html" target="_blank" rel="external">友盟推送jar文件与okio.jar冲突，看17楼</a></li>
+<li><a href="http://google.github.io/android-gradle-dsl/current/" target="_blank" rel="external">Google的gradle文档</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/03/08/重复引用-Duplicate files copied in APK/" data-id="cilj8k27n0009k4jwi2fs236b" class="article-share-link">Share</a>
       
       
     </footer>
@@ -587,7 +586,7 @@ webView<span class="built_in">.</span>loadData(<span class="built_in">data</span
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/01/11/webview引入html片段乱码/" data-id="cilj7sw9c000cmgjwvz8f3sgx" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/01/11/webview引入html片段乱码/" data-id="cilj8k27x000ck4jwjmq5u9hi" class="article-share-link">Share</a>
       
       
     </footer>
@@ -670,7 +669,7 @@ mMultiStateView.getView(MultiStateView.VIEW_STATE_ERROR).findViewById(R.id.retry
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/01/01/MultiStateView加载框架学习/" data-id="cilj7swa4000kmgjw82ndi8cb" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/01/01/MultiStateView加载框架学习/" data-id="cilj8k28k000kk4jwdumprz8t" class="article-share-link">Share</a>
       
       
     </footer>
@@ -718,7 +717,7 @@ mMultiStateView.getView(MultiStateView.VIEW_STATE_ERROR).findViewById(R.id.retry
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/12/30/找不到org.apache.http/" data-id="cilj7sw96000amgjw20xdl5mv" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/12/30/找不到org.apache.http/" data-id="cilj8k27q000ak4jwuqme8ais" class="article-share-link">Share</a>
       
       
     </footer>
@@ -760,7 +759,7 @@ mMultiStateView.getView(MultiStateView.VIEW_STATE_ERROR).findViewById(R.id.retry
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/12/03/RxJava学习/" data-id="cilj7swa1000jmgjw1ut2gmka" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/12/03/RxJava学习/" data-id="cilj8k28h000jk4jwpnyf0f4b" class="article-share-link">Share</a>
       
       
     </footer>
@@ -792,7 +791,7 @@ mMultiStateView.getView(MultiStateView.VIEW_STATE_ERROR).findViewById(R.id.retry
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/11/12/adupwardSDK反编译接入方法/" data-id="cilj7sw9t000hmgjw74k24pwd" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/11/12/adupwardSDK反编译接入方法/" data-id="cilj8k28b000hk4jwbac1tqmt" class="article-share-link">Share</a>
       
       
     </footer>
@@ -838,7 +837,7 @@ E:\Android\adt-bundle-windows-x86-<span class="number">20140702</span>\sdk\build
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/11/11/Apk 动态加载jar/" data-id="cilj7swaa000mmgjwf3uq829s" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/11/11/Apk 动态加载jar/" data-id="cilj8k28p000mk4jw50skckiw" class="article-share-link">Share</a>
       
       
     </footer>
@@ -910,7 +909,7 @@ http:<span class="comment">//jiagu.360.cn/1101144936.php?dtid=1101144931&amp;did
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/11/11/二次打包：apk加入自己的sdk包/" data-id="cilj7sw98000bmgjwty1yu07i" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/11/11/二次打包：apk加入自己的sdk包/" data-id="cilj8k27s000bk4jw3z4i2slx" class="article-share-link">Share</a>
       
       
     </footer>
@@ -951,15 +950,15 @@ http:<span class="comment">//jiagu.360.cn/1101144936.php?dtid=1101144931&amp;did
       <ul>
         
           <li>
-            <a href="/2016/03/08/重复引用-Duplicate files copied in APK/">重复引用错误-Duplicate files copied in APK</a>
-          </li>
-        
-          <li>
             <a href="/2016/03/08/greedao升级问题：表被删除处理/">(no title)</a>
           </li>
         
           <li>
             <a href="/2016/03/08/65535拆包处理-总结自《其实你不知道MultiDex到底有多坑》/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2016/03/08/重复引用-Duplicate files copied in APK/">重复引用错误-Duplicate files copied in APK</a>
           </li>
         
           <li>
