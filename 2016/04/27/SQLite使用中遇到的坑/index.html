@@ -11,13 +11,13 @@ SQLite 没有datediff日期时间相减的方法如果要实现日期相减的�
 greenDAO – SQLite 开源操作框架-遇到的坑gre">
 <meta property="og:type" content="article">
 <meta property="og:title" content="SQLite 和 greenDAO 使用中遇到的坑">
-<meta property="og:url" content="http://yoursite.com/2015/11/10/SQLite使用中遇到的坑/index.html">
+<meta property="og:url" content="http://yoursite.com/2016/04/27/SQLite使用中遇到的坑/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="SQLite 因为是个精简的数据库，所以会缺省了一些方法
 SQLite 没法修改列名所以要修改列名的话，还是直接新建一个列吧。
 SQLite 没有datediff日期时间相减的方法如果要实现日期相减的话，那就用sqlite里有个julianday函数转化后可以直接相减,得到的结果是以天(day)为单位数值，如果不足一天会以小数表示。
 greenDAO – SQLite 开源操作框架-遇到的坑gre">
-<meta property="og:updated_time" content="2015-11-10T14:53:45.013Z">
+<meta property="og:updated_time" content="2016-04-27T12:40:27.475Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SQLite 和 greenDAO 使用中遇到的坑">
 <meta name="twitter:description" content="SQLite 因为是个精简的数据库，所以会缺省了一些方法
@@ -71,8 +71,8 @@ greenDAO – SQLite 开源操作框架-遇到的坑gre">
       <div class="outer">
         <section id="main"><article id="post-SQLite使用中遇到的坑" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2015/11/10/SQLite使用中遇到的坑/" class="article-date">
-  <time datetime="2015-11-10T14:53:45.013Z" itemprop="datePublished">2015-11-10</time>
+    <a href="/2016/04/27/SQLite使用中遇到的坑/" class="article-date">
+  <time datetime="2016-04-27T12:40:27.475Z" itemprop="datePublished">2016-04-27</time>
 </a>
     
   </div>
@@ -94,7 +94,8 @@ greenDAO – SQLite 开源操作框架-遇到的坑gre">
         <pre><code><span class="title">SQLite</span> 因为是个精简的数据库，所以会缺省了一些方法
 </code></pre><h2 id="SQLite_没法修改列名">SQLite 没法修改列名</h2><p>所以要修改列名的话，还是直接新建一个列吧。</p>
 <h2 id="SQLite_没有datediff日期时间相减的方法">SQLite 没有datediff日期时间相减的方法</h2><p>如果要实现日期相减的话，那就用sqlite里有个julianday函数转化后可以直接相减,得到的结果是以天(day)为单位数值，如果不足一天会以小数表示。</p>
-<h2 id="greenDAO_–_SQLite_开源操作框架-遇到的坑">greenDAO – SQLite 开源操作框架-遇到的坑</h2><p>greenDAO 的确是很好用,但在我自己做项目 <a href="http://www.wandoujia.com/apps/com.qichengshike.qichengzhongzhuan" target="_blank" rel="external">【启程中转】</a> 时,还是遇到了坑<br>介绍一下这项目 <a href="http://www.wandoujia.com/apps/com.qichengshike.qichengzhongzhuan" target="_blank" rel="external">【启程中转】</a> ,这app只为一个需求:    </p>
+<h2 id="greenDAO_–_SQLite_开源操作框架-遇到的坑"><del>greenDAO – SQLite 开源操作框架-遇到的坑</del></h2><p>greendao 的 join 接口</p>
+<p><del>greenDAO 的确是很好用,但在我自己做项目 <a href="http://www.wandoujia.com/apps/com.qichengshike.qichengzhongzhuan" target="_blank" rel="external">【启程中转】</a> 时,还是遇到了坑   </del><br>介绍一下这项目 <a href="http://www.wandoujia.com/apps/com.qichengshike.qichengzhongzhuan" target="_blank" rel="external">【启程中转】</a> ,这app只为一个需求:    </p>
 <ul>
 <li>查询12306的中转车票</li>
 </ul>
@@ -114,7 +115,7 @@ position=<span class="number">1</span>的列车的到达地点(to_station)与pos
     + "</span><span class="keyword">WHERE</span> QUERY001.TO_STATION = QUERY002.FROM_STATION )<span class="string">";
 
 Query&lt;QueryEntity&gt; query = mQueryEntityDao.queryBuilder().where(new StringCondition("</span><span class="keyword">POSITION</span> = <span class="string">'1'</span> <span class="keyword">AND</span> TO_STATION = <span class="string">" + "</span>( <span class="string">" +tempSQL+"</span> )<span class="string">")).build();</span></span>
-</code></pre><p>这样看起来是对的,也查出了 <code>POSITION = &#39;1&#39;</code> 的列车有多少个,但因为 <code>POSITION = &#39;1&#39;</code> 和 <code>POSITION = &#39;2&#39;</code> 的数量是不一定相同的。<br>而现在只是查询出来了不重复的 <code>POSITION = &#39;1&#39;</code> 的列车有多少个<br>只要执行了 tempSQL 就可以得到正确的列车数据了,而在使用 greendao 的mQueryEntityDao.queryBuilder().where()还是要再一次比较<br>我也看了 greendao 的 join 接口, 但这好像是针对不同表的,而且在网上的中文资料也是很少,到后来也没用上,如有资料的,请指导一下        </p>
+</code></pre><p>这样看起来是对的,也查出了 <code>POSITION = &#39;1&#39;</code> 的列车有多少个,但因为 <code>POSITION = &#39;1&#39;</code> 和 <code>POSITION = &#39;2&#39;</code> 的数量是不一定相同的。<br>而现在只是查询出来了不重复的 <code>POSITION = &#39;1&#39;</code> 的列车有多少个<br>只要执行了 tempSQL 就可以得到正确的列车数据了,而在使用 greendao 的mQueryEntityDao.queryBuilder().where()还是要再一次比较<br><del>我也看了 greendao 的 join 接口, 但这好像是针对不同表的,而且在网上的中文资料也是很少,到后来也没用上,如有资料的,请指导一下</del>        </p>
 <p>后来我还是使用了以前的写法:</p>
 <p>public static List<queryentity> getRawQueryList(SQLiteDatabase mDb, String queryStr, int position)</queryentity></p>
 <pre><code>String tempSQL = "<span class="operator"><span class="keyword">SELECT</span> QUERY001.* <span class="keyword">FROM</span> <span class="string">"
@@ -141,12 +142,12 @@ Cursor mCursor = mDb.rawQuery(sql, null);</span></span>
 }
 </code></pre><p>执行到 String s2 = mCursor.getString(mCursor.getColumnIndex(temp[0])); 就报错了<br>所以我就直接根据 mCursor.getColumnNames()排序来获得指定的数据了</p>
 <hr>
-<h3 id="参考资料">参考资料</h3><p><a href="http://blog.csdn.net/raykenio/article/details/7026691" target="_blank" rel="external">SQLite时间/日期函数</a><br><a href="http://www.bubuko.com/infodetail-1000541.html" target="_blank" rel="external">【转】实现Sqlite datediff日期时间相减的方法</a><br><a href="http://greendao-orm.com/" target="_blank" rel="external"> greendao 官网 </a></p>
+<h3 id="参考资料">参考资料</h3><p><a href="http://blog.csdn.net/raykenio/article/details/7026691" target="_blank" rel="external">SQLite时间/日期函数</a><br><a href="http://www.bubuko.com/infodetail-1000541.html" target="_blank" rel="external">【转】实现Sqlite datediff日期时间相减的方法</a><br><a href="http://greendao-orm.com/" target="_blank" rel="external"> greendao 官网 </a>    </p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/11/10/SQLite使用中遇到的坑/" data-id="cilj8k28e000ik4jwl83l5or6" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/04/27/SQLite使用中遇到的坑/" data-id="cinivj3oi000j3cjwszsecolh" class="article-share-link">Share</a>
       
       
     </footer>
@@ -155,19 +156,19 @@ Cursor mCursor = mDb.rawQuery(sql, null);</span></span>
     
 <nav id="article-nav">
   
-    <a href="/2015/11/11/二次打包：apk加入自己的sdk包/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2016/04/27/greedao联表查询： joins的使用/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
-          Apk 加入sdk的流程
+          (no title)
         
       </div>
     </a>
   
   
-    <a href="/2015/11/09/untiy/2d/game/2d-game-00-开始/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2016/03/08/greedao升级问题：表被删除处理/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">2d-game-00-开始</div>
+      <div class="article-nav-title"></div>
     </a>
   
 </nav>
@@ -189,7 +190,7 @@ Cursor mCursor = mDb.rawQuery(sql, null);</span></span>
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">September 2015</a><span class="archive-list-count">2</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">September 2015</a><span class="archive-list-count">2</span></li></ul>
     </div>
   </div>
 
@@ -201,6 +202,14 @@ Cursor mCursor = mDb.rawQuery(sql, null);</span></span>
       <ul>
         
           <li>
+            <a href="/2016/04/27/greedao联表查询： joins的使用/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2016/04/27/SQLite使用中遇到的坑/">SQLite 和 greenDAO 使用中遇到的坑</a>
+          </li>
+        
+          <li>
             <a href="/2016/03/08/greedao升级问题：表被删除处理/">(no title)</a>
           </li>
         
@@ -210,14 +219,6 @@ Cursor mCursor = mDb.rawQuery(sql, null);</span></span>
         
           <li>
             <a href="/2016/03/08/重复引用-Duplicate files copied in APK/">重复引用错误-Duplicate files copied in APK</a>
-          </li>
-        
-          <li>
-            <a href="/2016/01/11/webview引入html片段乱码/">webview引入html片段乱码</a>
-          </li>
-        
-          <li>
-            <a href="/2016/01/01/MultiStateView加载框架学习/">MultiStateView加载框架学习</a>
           </li>
         
       </ul>
