@@ -61,6 +61,89 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Android 夜间模式：Colorful 使用" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/06/17/Android 夜间模式：Colorful 使用/" class="article-date">
+  <time datetime="2016-06-17T12:45:30.416Z" itemprop="datePublished">2016-06-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/06/17/Android 夜间模式：Colorful 使用/">Android 夜间模式：Colorful 使用</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Android_夜间模式：Colorful_使用">Android 夜间模式：Colorful 使用</h1><p><a href="https://github.com/hehonghui/Colorful" target="_blank" rel="external">https://github.com/hehonghui/Colorful</a><br><a href="https://github.com/qq137712630/MeiZiNews" target="_blank" rel="external">有妹子的日报 MeiZiNews </a></p>
+<p>夜间模式最好在项目一开始就决定好，不然在后来的修改会很麻烦</p>
+<hr>
+<h2 id="Colorful_夜间模式的实现">Colorful 夜间模式的实现</h2><p>其实这项目的方法主要是以切换 theme 来实现夜间模式，但它有个好处就是可以随时切换，而实现这效果的主要方法是在 Colorful 类里：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Colorful.java</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * 设置新的主题</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@param</span> newTheme</span><br><span class="line"> */</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">setTheme</span><span class="params">(<span class="keyword">int</span> newTheme)</span> </span>&#123;</span><br><span class="line">    mActivity.setTheme(newTheme);</span><br><span class="line">    makeChange(newTheme);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * 修改各个视图绑定的属性</span><br><span class="line"> */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">makeChange</span><span class="params">(<span class="keyword">int</span> themeId)</span> </span>&#123;</span><br><span class="line">    Theme curTheme = mActivity.getTheme();</span><br><span class="line">    <span class="keyword">for</span> (ViewSetter setter : mElements) &#123;</span><br><span class="line">        setter.setValue(curTheme, themeId);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>它通过 Activity.setTheme 来更改主题然后 通过 makeChange 方法来更改每一个写入的 View 的属性 </p>
+<p>相关文章：</p>
+<ul>
+<li><a href="http://kymjs.com/code/2015/05/26/01" target="_blank" rel="external">张涛：Android夜间模式实现</a></li>
+<li><a href="http://www.jianshu.com/p/60608820bb71" target="_blank" rel="external">夜晚的故事(android夜间模式实现)</a></li>
+<li><a href="http://mp.weixin.qq.com/s?__biz=MzA4MjU5NTY0NA==&amp;mid=401740657&amp;idx=1&amp;sn=8e6727fbe094ea42d5fd80b185a49395#rd" target="_blank" rel="external">Android夜间模式最佳实践</a></li>
+</ul>
+<hr>
+<h2 id="Colorful_使用">Colorful 使用</h2><p>一般的使用方法可以参考官方的，它是自带 textColor 和 background 的了</p>
+<ul>
+<li><a href="https://github.com/hehonghui/Colorful" target="_blank" rel="external">https://github.com/hehonghui/Colorful</a></li>
+</ul>
+<p>如果你还需修改更多的属性，可以参考 setter 包下的类来编写自己的构造类，通过使用 Colorful.Builder(activity).setter 方法来调用</p>
+<p>当然还有比较复杂的情况，下面是我遇到的。</p>
+<p>以自己的开源项目 <a href="https://github.com/qq137712630/MeiZiNews" target="_blank" rel="external">MeiZiNews</a>  来讲</p>
+<h3 id="Activity_+_ViewPager_+_Fragment">Activity + ViewPager + Fragment</h3><p>有2种方法：</p>
+<ol>
+<li>Activity 传值</li>
+<li>使用事件总线框架</li>
+</ol>
+<p>而我使用了 RxJava ，所以就选择 RxBus-事件总线：Fragment 通过收到事件，然后直接在事件处理中使用 setTheme</p>
+<p>RxBus-事件总线</p>
+<p>按照以下顺序阅读的话，大概就理解如何使用了</p>
+<ol>
+<li><a href="https://drakeet.me/rxbus" target="_blank" rel="external">翻译：通过 RxJava 实现一个 Event Bus – RxBus</a></li>
+<li><a href="http://www.easydone.cn/2016/03/29/" target="_blank" rel="external">当EventBus遇上RxJava</a></li>
+<li><a href="http://www.james-ye.com/2016-04-07/rxbus%E5%85%A5%E9%97%A8.html" target="_blank" rel="external">RXBUS入门</a></li>
+<li><p><a href="http://www.jianshu.com/p/ca090f6e2fe2/" target="_blank" rel="external">做更好的RxBus：用RxJava实现事件总线(Event Bus)</a></p>
+<p><a href="https://mcxiaoke.gitbooks.io/rxdocs/content/Subject.html" target="_blank" rel="external">Subject解读：ReactiveX文档中文翻译</a></p>
+</li>
+</ol>
+<h3 id="RecyclerView">RecyclerView</h3><p>虽然官方有 ViewGroupSetter 可以用，但在 ViewPager + Fragment 的 RecyclerView 会有个别的 Item 没有变化：</p>
+<p><a href="https://github.com/hehonghui/Colorful/issues/5" target="_blank" rel="external">https://github.com/hehonghui/Colorful/issues/5</a></p>
+<p>所以，我根据上面的问题新建一个 RecyclerViewSetter 类：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RecyclerViewSetter</span> <span class="keyword">extends</span> <span class="title">ViewGroupSetter</span> </span>&#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">RecyclerViewSetter</span><span class="params">(ViewGroup targetView, <span class="keyword">int</span> resId)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(targetView, resId);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">RecyclerViewSetter</span><span class="params">(ViewGroup targetView)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(targetView);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">clearRecyclerViewRecyclerBin</span><span class="params">(View rootView)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.clearRecyclerViewRecyclerBin(rootView);</span><br><span class="line"></span><br><span class="line">        ((RecyclerView) rootView).getRecycledViewPool().clear();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setValue</span><span class="params">(Resources.Theme newTheme, <span class="keyword">int</span> themeId)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        clearRecyclerViewRecyclerBin(mView);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 遍历子元素与要修改的属性,如果相同那么则修改子View的属性</span></span><br><span class="line">        <span class="keyword">for</span> (ViewSetter setter : mItemViewSetters) &#123;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; ((RecyclerView) mView).getAdapter().getItemCount(); i++) &#123;</span><br><span class="line"></span><br><span class="line">                View itemView = ((RecyclerView) mView).getChildAt(i);</span><br><span class="line">                <span class="keyword">if</span> (itemView == <span class="keyword">null</span>) &#123;</span><br><span class="line">                    <span class="keyword">continue</span>;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">boolean</span> isBaseAdapterHelper = ((RecyclerView) mView).getChildViewHolder(itemView) <span class="keyword">instanceof</span> BaseAdapterHelper;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (!isBaseAdapterHelper) &#123;</span><br><span class="line">                    <span class="keyword">continue</span>;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                BaseAdapterHelper baseAdapterHelper = (BaseAdapterHelper) ((RecyclerView) mView).getChildViewHolder(itemView);</span><br><span class="line">                setter.mView = baseAdapterHelper.getView(setter.mViewId);</span><br><span class="line">                <span class="keyword">int</span> itemId = setter.getViewId();</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (baseAdapterHelper.getView(itemId) == <span class="keyword">null</span>) &#123;</span><br><span class="line">                    <span class="keyword">continue</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                setter.setValue(newTheme, themeId);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<p>最后，推荐下自己的开源项目：</p>
+<p><a href="https://github.com/qq137712630/MeiZiNews" target="_blank" rel="external">有妹子的日报:https://github.com/qq137712630/MeiZiNews</a></p>
+<p><a href="http://www.wandoujia.com/apps/com.ms.meizinewsapplication" target="_blank" rel="external">APK下载：http://www.wandoujia.com/apps/com.ms.meizinewsapplication</a></p>
+<p>它使用了多个开源框架，并在 ReadMe 中都有标明其框架的使用在哪个方面，遇到了什么奇怪的问题，中文的哦，喜欢的， Star 一下。</p>
+<hr>
+<h3 id="我的公众号">我的公众号</h3><p><img src="img/wx_er_wei_ma.jpg" alt=""></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/06/17/Android 夜间模式：Colorful 使用/" data-id="cipjqdfop000pfojwtdk4tlan" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-greedao联表查询： joins的使用" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2016/04/27/greedao联表查询： joins的使用/" class="article-date">
@@ -107,7 +190,7 @@ public List<span class="variable">&lt;CollectEntity&gt;</span> queryCollectByhtm
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/04/27/greedao联表查询： joins的使用/" data-id="cinivj3ny000f3cjwsibg3g6p" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/04/27/greedao联表查询： joins的使用/" data-id="cipjqdfo0000gfojw5skdfbdc" class="article-share-link">Share</a>
       
       
     </footer>
@@ -195,7 +278,7 @@ Cursor mCursor = mDb.rawQuery(sql, null);</span></span>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/04/27/SQLite使用中遇到的坑/" data-id="cinivj3oi000j3cjwszsecolh" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/04/27/SQLite使用中遇到的坑/" data-id="cipjqdfoc000kfojwp7m8umnz" class="article-share-link">Share</a>
       
       
     </footer>
@@ -392,7 +475,7 @@ public void migrate(<span class="type">SQLiteDatabase</span> db, <span class="ty
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/03/08/greedao升级问题：表被删除处理/" data-id="cinivj3o2000g3cjwo5ncixuc" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/03/08/greedao升级问题：表被删除处理/" data-id="cipjqdfo4000hfojwjw3pcac8" class="article-share-link">Share</a>
       
       
     </footer>
@@ -626,7 +709,7 @@ compile <span class="string">'com.android.support:multidex:1.0.1'</span>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/03/08/65535拆包处理-总结自《其实你不知道MultiDex到底有多坑》/" data-id="cinivj3m800003cjwd8e2q46e" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/03/08/65535拆包处理-总结自《其实你不知道MultiDex到底有多坑》/" data-id="cipjqdfmd0000fojwhd91djul" class="article-share-link">Share</a>
       
       
     </footer>
@@ -685,7 +768,7 @@ compile <span class="string">'com.android.support:multidex:1.0.1'</span>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/03/08/重复引用-Duplicate files copied in APK/" data-id="cinivj3n100093cjwo4yv548k" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/03/08/重复引用-Duplicate files copied in APK/" data-id="cipjqdfni000afojwdfy6tbj6" class="article-share-link">Share</a>
       
       
     </footer>
@@ -730,7 +813,7 @@ webView<span class="built_in">.</span>loadData(<span class="built_in">data</span
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/01/11/webview引入html片段乱码/" data-id="cinivj3nn000c3cjwvwpp5zie" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/01/11/webview引入html片段乱码/" data-id="cipjqdfns000dfojwv7zpwwwc" class="article-share-link">Share</a>
       
       
     </footer>
@@ -813,7 +896,7 @@ mMultiStateView.getView(MultiStateView.VIEW_STATE_ERROR).findViewById(R.id.retry
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/01/01/MultiStateView加载框架学习/" data-id="cinivj3om000l3cjwpj9zy5kt" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/01/01/MultiStateView加载框架学习/" data-id="cipjqdfoi000mfojwlg24teaj" class="article-share-link">Share</a>
       
       
     </footer>
@@ -861,7 +944,7 @@ mMultiStateView.getView(MultiStateView.VIEW_STATE_ERROR).findViewById(R.id.retry
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/12/30/找不到org.apache.http/" data-id="cinivj3nh000a3cjw5xlnkeeu" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/12/30/找不到org.apache.http/" data-id="cipjqdfnm000bfojwoxkv6r2y" class="article-share-link">Share</a>
       
       
     </footer>
@@ -903,39 +986,7 @@ mMultiStateView.getView(MultiStateView.VIEW_STATE_ERROR).findViewById(R.id.retry
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/12/03/RxJava学习/" data-id="cinivj3ok000k3cjwdgvtny9i" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-adupwardSDK反编译接入方法" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/11/12/adupwardSDK反编译接入方法/" class="article-date">
-  <time datetime="2015-11-12T06:06:43.034Z" itemprop="datePublished">2015-11-12</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="apktool-yml复制以下内容到目标反编译的apktool-yml下">apktool.yml复制以下内容到目标反编译的apktool.yml下</h2><pre><code><span class="symbol">unknownFiles:</span>
-  com/adupward/<span class="class"><span class="keyword">lib</span>/<span class="title">fangcha</span>.<span class="title">png</span>: '8'</span>
-  com/adupward/<span class="class"><span class="keyword">lib</span>/<span class="title">lslide</span>.<span class="title">png</span>: '8'</span>
-  com/adupward/<span class="class"><span class="keyword">lib</span>/<span class="title">smallcha</span>.<span class="title">png</span>: '8'</span>
-  com/adupward/<span class="class"><span class="keyword">lib</span>/<span class="title">sslide</span>.<span class="title">png</span>: '8'</span>
-  com/adupward/<span class="class"><span class="keyword">lib</span>/<span class="title">yuancha</span>.<span class="title">png</span>: '8'</span>
-</code></pre><h2 id="复制unknown文件夹到目标反编译的根目录下的unknown文件夹，没有则创建">复制unknown文件夹到目标反编译的根目录下的unknown文件夹，没有则创建</h2><h2 id="复制adupwardSDK-example\res\values\integers-xml_到_目标反编译的res\values\_文件夹，没有则创建">复制adupwardSDK-example\res\values\integers.xml 到 目标反编译的res\values\ 文件夹，没有则创建</h2>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/11/12/adupwardSDK反编译接入方法/" data-id="cinivj3oe000i3cjww412nqcd" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/12/03/RxJava学习/" data-id="cipjqdfof000lfojwdthk1ujj" class="article-share-link">Share</a>
       
       
     </footer>
@@ -964,7 +1015,7 @@ mMultiStateView.getView(MultiStateView.VIEW_STATE_ERROR).findViewById(R.id.retry
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">September 2015</a><span class="archive-list-count">2</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">September 2015</a><span class="archive-list-count">2</span></li></ul>
     </div>
   </div>
 
@@ -974,6 +1025,10 @@ mMultiStateView.getView(MultiStateView.VIEW_STATE_ERROR).findViewById(R.id.retry
     <h3 class="widget-title">Recents</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2016/06/17/Android 夜间模式：Colorful 使用/">Android 夜间模式：Colorful 使用</a>
+          </li>
         
           <li>
             <a href="/2016/04/27/greedao联表查询： joins的使用/">(no title)</a>
@@ -989,10 +1044,6 @@ mMultiStateView.getView(MultiStateView.VIEW_STATE_ERROR).findViewById(R.id.retry
         
           <li>
             <a href="/2016/03/08/65535拆包处理-总结自《其实你不知道MultiDex到底有多坑》/">(no title)</a>
-          </li>
-        
-          <li>
-            <a href="/2016/03/08/重复引用-Duplicate files copied in APK/">重复引用错误-Duplicate files copied in APK</a>
           </li>
         
       </ul>
