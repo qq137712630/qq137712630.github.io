@@ -61,10 +61,127 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Android 网络请求：Retrofit 使用" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/06/18/Android 网络请求：Retrofit 使用/" class="article-date">
+  <time datetime="2016-06-18T06:09:13.006Z" itemprop="datePublished">2016-06-18</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="title:Android_网络请求：Retrofit_使用">title:Android 网络请求：Retrofit 使用</h2><h1 id="Android_网络请求：Retrofit_使用">Android 网络请求：Retrofit 使用</h1><p><a href="https://github.com/square/retrofit" target="_blank" rel="external">网络请求：retrofit+okhttp3</a></p>
+<p>示例项目：</p>
+<p><a href="https://github.com/qq137712630/MeiZiNews" target="_blank" rel="external">有妹子的日报 MeiZiNews </a></p>
+<p>总结：结合 RxJava 使用得十分的爽。如果没有用到 RxJava，个人感觉这样使用和用 OkHttp3 的封装差不多</p>
+<hr>
+<p>##配置</p>
+<p><a href="https://drakeet.me/retrofit-2-0-okhttp-3-0-config" target="_blank" rel="external">Retrofit 2.0 + OkHttp 3.0 配置</a></p>
+<hr>
+<p>##转换器</p>
+<p><a href="http://square.github.io/retrofit/#restadapter-configuration" target="_blank" rel="external">retrofit</a></p>
+<p><a href="http://www.07net01.com/program/2016/02/1280821.html" target="_blank" rel="external">RxAndroid+Retrofit环境搭建</a></p>
+<p>转换器可以被添加到支持其他类型。六兄弟模块适应流行的序列化库为您提供方便。<br>Converters can be added to support other types. Six sibling modules adapt popular serialization libraries for your convenience.</p>
+<pre><code>Gson: com<span class="class">.squareup</span><span class="class">.retrofit2</span>:converter-gson
+Jackson: com<span class="class">.squareup</span><span class="class">.retrofit2</span>:converter-jackson
+Moshi: com<span class="class">.squareup</span><span class="class">.retrofit2</span>:converter-moshi
+Protobuf: com<span class="class">.squareup</span><span class="class">.retrofit2</span>:converter-protobuf
+Wire: com<span class="class">.squareup</span><span class="class">.retrofit2</span>:converter-wire
+Simple XML: com<span class="class">.squareup</span><span class="class">.retrofit2</span>:converter-simplexml
+Scalars (primitives, boxed, and String): com<span class="class">.squareup</span><span class="class">.retrofit2</span>:converter-scalars
+</code></pre><p>直接返回String类型需引入：ScalarsConverterFactory.create()</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">retrofit = <span class="keyword">new</span> Retrofit.Builder()</span><br><span class="line">		.client(MyOkHttpClient.getMyOkHttpClient().getOkHttpClient())<span class="comment">//设置不同的底层网络库</span></span><br><span class="line">		.baseUrl(strBaseUrl)</span><br><span class="line">		.addConverterFactory(ScalarsConverterFactory.create())<span class="comment">//添加 String类型[ Scalars (primitives, boxed, and String)] 转换器</span></span><br><span class="line">		.addCallAdapterFactory(RxJavaCallAdapterFactory.create())<span class="comment">//添加 RxJava 适配器</span></span><br><span class="line">		.build();</span><br></pre></td></tr></table></figure>
+<p>返回Gson类型需引入：GsonConverterFactory.create()</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">retrofit = <span class="keyword">new</span> Retrofit.Builder()</span><br><span class="line">		.client(MyOkHttpClient.getMyOkHttpClient().getOkHttpClient())<span class="comment">//设置不同的底层网络库</span></span><br><span class="line">		.baseUrl(strBaseUrl)</span><br><span class="line">		.addConverterFactory(GsonConverterFactory.create())<span class="comment">//添加 json 转换器</span></span><br><span class="line">		.addCallAdapterFactory(RxJavaCallAdapterFactory.create())<span class="comment">//添加 RxJava 适配器</span></span><br><span class="line">		.build();</span><br></pre></td></tr></table></figure>
+<hr>
+<p>##Retrofit 结合 RxJava使用</p>
+<p><a href="http://blog.csdn.net/ttccaaa/article/details/50659234" target="_blank" rel="external">Retrofit 结合 RxJava使用</a></p>
+<ol>
+<li><p>添加依赖</p>
+<pre><code><span class="keyword">compile</span> <span class="string">'com.squareup.retrofit2:retrofit:2.0.0-beta4'</span>
+<span class="keyword">compile</span> <span class="string">'com.squareup.retrofit2:converter-gson:2.0.0-beta4'</span>
+
+<span class="keyword">compile</span> <span class="string">'com.squareup.retrofit2:adapter-rxjava:2.0.0-beta4'</span>
+
+<span class="keyword">compile</span> <span class="string">'io.reactivex:rxandroid:1.1.0'</span>
+<span class="keyword">compile</span> <span class="string">'io.reactivex:rxjava:1.1.0'</span>
+</code></pre><p>前两个是 Retrofit 和 Gson 的依赖，第三个是 Retrofit 中 RxJava 转换器的依赖，最后两个就是 RxJava 和 Rx Android 的依赖</p>
+</li>
+<li><p>编写 API</p>
+<p>使用 RxJava 的情况下，接口文件稍有修改，接口中的方法的返回类型不再是 Call 而是 Observable 类型：</p>
+</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">GitHub</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@GET</span>(<span class="string">"/repos/&#123;owner&#125;/&#123;repo&#125;/contributors"</span>)</span><br><span class="line">    Call&lt;List&lt;Contributor&gt;&gt; contributors(<span class="annotation">@Path</span>(<span class="string">"owner"</span>) String owner,<span class="annotation">@Path</span>(<span class="string">"repo"</span>) String repo);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//使用 RxJava 的方法,返回一个 Observable</span></span><br><span class="line">    <span class="annotation">@GET</span>(<span class="string">"/repos/&#123;owner&#125;/&#123;repo&#125;/contributors"</span>)</span><br><span class="line">    Observable&lt;List&lt;Contributor&gt;&gt; RxContributors(<span class="annotation">@Path</span>(<span class="string">"owner"</span>) String owner,<span class="annotation">@Path</span>(<span class="string">"repo"</span>) String repo);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code>结合 RxJava 使用的 接口就定义好了，模型类不需要变动，接下来直接进行网络请求
+</code></pre><ol>
+<li><p>网络请求</p>
+<p>使用 RxJava 的 Retrofit 可以直接在 主线程中编写。    </p>
+</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">    setContentView(R.layout.activity_main);</span><br><span class="line"></span><br><span class="line">    Retrofit retrofit=<span class="keyword">new</span> Retrofit.Builder()</span><br><span class="line">            .baseUrl(<span class="string">"https://api.github.com"</span>)</span><br><span class="line">            .addConverterFactory(GsonConverterFactory.create())<span class="comment">//添加 json 转换器</span></span><br><span class="line">            .addCallAdapterFactory(RxJavaCallAdapterFactory.create())<span class="comment">//添加 RxJava 适配器</span></span><br><span class="line">            .build();</span><br><span class="line"></span><br><span class="line">    GitHub gitHub=retrofit.create(GitHub.class);</span><br><span class="line">    gitHub.RxContributors(<span class="string">"square"</span>,<span class="string">"retrofit"</span>)</span><br><span class="line">            .subscribeOn(Schedulers.io())</span><br><span class="line">            .observeOn(AndroidSchedulers.mainThread())</span><br><span class="line">            .subscribe(<span class="keyword">new</span> Subscriber&lt;List&lt;Contributor&gt;&gt;() &#123;</span><br><span class="line">                <span class="annotation">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCompleted</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                    Log.i(<span class="string">"TAG"</span>,<span class="string">"onCompleted"</span>);</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="annotation">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onError</span><span class="params">(Throwable e)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="annotation">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onNext</span><span class="params">(List&lt;Contributor&gt; contributors)</span> </span>&#123;</span><br><span class="line">                   <span class="keyword">for</span> (Contributor c:contributors)&#123;</span><br><span class="line">                       Log.i(<span class="string">"TAG"</span>,<span class="string">"RxJava--&gt;"</span>+c.getLogin()+<span class="string">"  "</span>+c.getId()+<span class="string">"  "</span>+c.getContributions());</span><br><span class="line">                   &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<p>##使用Retrofit和Okhttp实现网络缓存。无网读缓存，有网根据过期时间重新请求</p>
+<p><a href="https://github.com/square/okhttp/wiki/Recipes" target="_blank" rel="external">okhttp 请求设置官方文档</a></p>
+<p><a href="http://www.jianshu.com/p/9c3b4ea108a7#" target="_blank" rel="external">使用Retrofit和Okhttp实现网络缓存。无网读缓存，有网根据过期时间重新请求</a></p>
+<p><a href="https://github.com/oubowu/OuNews" target="_blank" rel="external">OuNews 新闻：RetrofitManager类下的 initOkHttpClient 方法</a></p>
+<p> okhttp3.X，retrofit:2.0.0-beta4适用</p>
+<ol>
+<li>配置okhttp中的Cache</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">OkHttpClient okHttpClient;</span><br><span class="line">File cacheFile = <span class="keyword">new</span> File(DemoActivity.<span class="keyword">this</span>.getCacheDir(), <span class="string">"[缓存目录]"</span>);</span><br><span class="line">Cache cache = <span class="keyword">new</span> Cache(cacheFile, <span class="number">1024</span> * <span class="number">1024</span> * <span class="number">10</span>); <span class="comment">//100Mb</span></span><br><span class="line">okHttpClient = <span class="keyword">new</span> OkHttpClient.Builder()</span><br><span class="line">     .cache(cache)</span><br><span class="line">     .build();</span><br></pre></td></tr></table></figure>
+<pre><code>栗子：
+</code></pre><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 完成缓存</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyOkHttpClient</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//设缓存有效期为两天</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> CACHE_STALE_SEC = <span class="number">60</span> * <span class="number">60</span> * <span class="number">24</span> * <span class="number">2</span>;</span><br><span class="line">    <span class="comment">//查询缓存的Cache-Control设置，为if-only-cache时只查询缓存而不会请求服务器，max-stale可以配合设置缓存失效时间</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">static</span> <span class="keyword">final</span> String CACHE_CONTROL_CACHE = <span class="string">"only-if-cached, max-stale="</span> + CACHE_STALE_SEC;</span><br><span class="line">    <span class="comment">//查询网络的Cache-Control设置，头部Cache-Control设为max-age=0时则不会使用缓存而请求服务器</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">static</span> <span class="keyword">final</span> String CACHE_CONTROL_NETWORK = <span class="string">"max-age=0"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String TAG = <span class="string">"MyOkHttpClient"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> OkHttpClient okHttpClient;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> MyOkHttpClient myOkHttpClient;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> MyOkHttpClient <span class="title">getMyOkHttpClient</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (myOkHttpClient == <span class="keyword">null</span>) &#123;</span><br><span class="line">            myOkHttpClient = <span class="keyword">new</span> MyOkHttpClient();</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> myOkHttpClient;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * 初始化</span><br><span class="line">     *</span><br><span class="line">     * <span class="doctag">@param</span> mContext</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">(<span class="keyword">final</span> Context mContext)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (okHttpClient != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        Log.e(TAG, <span class="string">"初始化okHttpClient"</span>);</span><br><span class="line">        <span class="comment">// 因为BaseUrl不同所以这里Retrofit不为静态，但是OkHttpClient配置是一样的,静态创建一次即可</span></span><br><span class="line">        File cacheFile = <span class="keyword">new</span> File(</span><br><span class="line">                mContext.getCacheDir(),</span><br><span class="line">                <span class="string">"HttpCache"</span></span><br><span class="line">        ); <span class="comment">// 指定缓存路径</span></span><br><span class="line">        Cache cache = <span class="keyword">new</span> Cache(cacheFile, <span class="number">1024</span> * <span class="number">1024</span> * <span class="number">100</span>); <span class="comment">// 指定缓存大小100Mb</span></span><br><span class="line">        <span class="comment">// 云端响应头拦截器，用来配置缓存策略</span></span><br><span class="line">        Interceptor rewriteCacheControlInterceptor = <span class="keyword">new</span> Interceptor() &#123;</span><br><span class="line">            <span class="annotation">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> Response <span class="title">intercept</span><span class="params">(Chain chain)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">                Request request = chain.request();</span><br><span class="line">                <span class="keyword">if</span> (!NetUtil.isConnected(mContext)) &#123;</span><br><span class="line">                    request = request.newBuilder()</span><br><span class="line">                            .cacheControl(CacheControl.FORCE_CACHE).build();</span><br><span class="line">                    Log.e(TAG, <span class="string">"no network"</span>);</span><br><span class="line">                &#125;</span><br><span class="line">                Response originalResponse = chain.proceed(request);</span><br><span class="line">                <span class="keyword">if</span> (NetUtil.isConnected(mContext)) &#123;</span><br><span class="line">                    <span class="comment">//有网的时候读接口上的@Headers里的配置，你可以在这里进行统一的设置</span></span><br><span class="line">                    String cacheControl = request.cacheControl().toString();</span><br><span class="line">                    <span class="keyword">return</span> originalResponse.newBuilder()</span><br><span class="line">                            .header(<span class="string">"Cache-Control"</span>, cacheControl)</span><br><span class="line">                            .removeHeader(<span class="string">"Pragma"</span>).build();</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="keyword">return</span> originalResponse.newBuilder().header(<span class="string">"Cache-Control"</span>,</span><br><span class="line">                            <span class="string">"public, only-if-cached,"</span> + CACHE_STALE_SEC)</span><br><span class="line">                            .removeHeader(<span class="string">"Pragma"</span>).build();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">        okHttpClient = <span class="keyword">new</span> OkHttpClient.Builder().cache(cache)</span><br><span class="line">                .addNetworkInterceptor(rewriteCacheControlInterceptor)</span><br><span class="line">                .addInterceptor(rewriteCacheControlInterceptor)</span><br><span class="line">                .connectTimeout(<span class="number">30</span>, TimeUnit.SECONDS).build();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> OkHttpClient <span class="title">getOkHttpClient</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> okHttpClient;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * 根据网络状况获取缓存的策略</span><br><span class="line">     *</span><br><span class="line">     * <span class="doctag">@return</span></span><br><span class="line">     */</span></span><br><span class="line">    <span class="annotation">@NonNull</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">getCacheControl</span><span class="params">(Context mContext)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> NetUtil.isConnected(mContext) ? CACHE_CONTROL_NETWORK : CACHE_CONTROL_CACHE;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>配置请求头中的cache-control</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//使用 RxJava 的方法,返回一个 Observable</span></span><br><span class="line"><span class="annotation">@Headers</span>(<span class="string">"Cache-Control: public, max-age=3600"</span>)</span><br><span class="line"><span class="annotation">@GET</span>(<span class="string">"/repos/&#123;owner&#125;/&#123;repo&#125;/contributors"</span>)</span><br><span class="line">Observable&lt;List&lt;Contributor&gt;&gt; RxContributors(<span class="annotation">@Path</span>(<span class="string">"owner"</span>) String owner,<span class="annotation">@Path</span>(<span class="string">"repo"</span>) String repo);</span><br></pre></td></tr></table></figure>
+<ol>
+<li>配置请求 Retrofit 设置不同的底层网络库</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Retrofit retrofit = <span class="keyword">new</span> Retrofit.Builder()</span><br><span class="line">        .client(okHttpClient)</span><br><span class="line">        .baseUrl(<span class="string">"https://api.github.com"</span>)</span><br><span class="line">        .addConverterFactory(GsonConverterFactory.create())<span class="comment">//添加 json 转换器</span></span><br><span class="line">        .addCallAdapterFactory(RxJavaCallAdapterFactory.create())<span class="comment">//添加 RxJava 适配器</span></span><br><span class="line">        .build();</span><br></pre></td></tr></table></figure>
+<ol>
+<li>开启打印连接日志</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">   <span class="comment">/**</span><br><span class="line">    * 开启打印连接日志</span><br><span class="line">    * <span class="doctag">@return</span></span><br><span class="line">    */</span></span><br><span class="line">   <span class="function"><span class="keyword">private</span> HttpLoggingInterceptor <span class="title">getHttpLoggingInterceptor</span><span class="params">()</span> </span>&#123;</span><br><span class="line">       <span class="keyword">boolean</span> isDebug= <span class="keyword">false</span>;<span class="comment">//是否开启</span></span><br><span class="line">       HttpLoggingInterceptor interceptor = <span class="keyword">new</span> HttpLoggingInterceptor();</span><br><span class="line">	</span><br><span class="line">       <span class="keyword">if</span>(isDebug)</span><br><span class="line">       &#123;</span><br><span class="line">           interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);</span><br><span class="line">       &#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//开启打印连接日志</span></span><br><span class="line">       <span class="keyword">return</span> interceptor;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">OkHttpClient.Builder().addInterceptor(getHttpLoggingInterceptor())</span><br><span class="line"></span><br><span class="line">eg:</span><br><span class="line"></span><br><span class="line">      okHttpClient = <span class="keyword">new</span> OkHttpClient.Builder()</span><br><span class="line">              .addInterceptor(getHttpLoggingInterceptor())</span><br><span class="line">              .cache(cache)</span><br><span class="line">              .addNetworkInterceptor(rewriteCacheControlInterceptor)</span><br><span class="line">              .addInterceptor(rewriteCacheControlInterceptor)</span><br><span class="line">              .connectTimeout(<span class="number">30</span>, TimeUnit.SECONDS).build();</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="Retrofit_如何使用Observable-from发出多条连接的？">Retrofit 如何使用Observable.from发出多条连接的？</h2><p>以自己的开源项目 <a href="https://github.com/qq137712630/MeiZiNews" target="_blank" rel="external">MeiZiNews</a> 中的 <figure class="highlight"><figcaption><span>MzituImgListModel ```` 为栗子，大概是这3步：</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#10; 1. &#20808;&#21521;&#32593;&#31449;&#35831;&#27714;&#21442;&#25968;&#38142;&#34920;&#10; 2. &#20351;&#29992; flatMap&#65292;&#23427;&#21487;&#20197;&#36820;&#22238; Observable&#65292;&#25152;&#20197;&#22312; flatMap &#37324;&#20351;&#29992; Observable.from&#10; 3. &#20877;&#20351;&#29992; flatMap&#65292;&#22312;&#23427;&#37324;&#38754;&#21457;&#20986;&#21333;&#27425;&#32593;&#32476;&#35831;&#27714;&#36830;&#25509;&#30340; Observable&#65292;&#36825;&#26102;&#22312;&#23427;&#36820;&#22238;&#30340;&#23601;&#26159;&#21333;&#27425;&#35831;&#27714;&#30340;&#32467;&#26524;&#20102;&#10;&#10;&#10;```Java&#10;&#10;    /**&#10;     * Retrofit &#20351;&#29992;Observable.from&#21457;&#20986;&#22810;&#26465;&#36830;&#25509;&#10;     * @param context&#10;     * @param listener&#10;     * @return&#10;     */&#10;    @Override&#10;    public Subscription loadWeb(final Context context, final OnModelListener&#60;ImgItem&#62; listener) &#123;&#10;&#10;        MyStringRetrofit.getMyStringRetrofit().init(context, MeiZiApi.MZITU_API);&#10;        final MzituApi mzituApi = MyStringRetrofit.getMyStringRetrofit().getCreate(MzituApi.class);&#10;&#10;&#10;        Observable observable = mzituApi.RxImgList(&#10;                MyOkHttpClient.getCacheControl(context),&#10;                imgId,&#10;                page&#10;        ).flatMap(&#10;                new Func1&#60;String, Observable&#60;Integer&#62;&#62;() &#123;&#10;&#10;                    @Override&#10;                    public Observable&#60;Integer&#62; call(String s) &#123;&#10;                        // &#31532;&#19968;&#27425;&#35831;&#27714;&#20808;&#35831;&#27714;&#39029;&#25968;&#65292;&#20174;&#32780;&#33719;&#24471;&#35201;&#21457;&#30340;&#38142;&#25509;&#25968;&#10;&#10;                        Elements mElements = JsoupUtil.getMzituImgPage(s);&#10;                        Elements tempElements = mElements.select(&#34;span&#34;);&#10;                        String size = tempElements.get(tempElements.size() - 2).text();&#10;                        if (TextUtils.isEmpty(size)) &#123;&#10;                            return null;&#10;                        &#125;&#10;&#10;                        ArrayList&#60;Integer&#62; numList = new ArrayList&#60;Integer&#62;();&#10;&#10;                        for (int i = 1; i &#60;= Integer.parseInt(size); i++) &#123;&#10;                            numList.add(i);&#10;                        &#125;&#10;                        return Observable.from(numList);&#10;                    &#125;&#10;                &#125;&#10;        ).flatMap(&#10;                new Func1&#60;Integer, Observable&#60;String&#62;&#62;() &#123;&#10;                    @Override&#10;                    public Observable&#60;String&#62; call(Integer integer) &#123;&#10;                    //   &#21457;&#20986;&#21333;&#27425;&#32593;&#32476;&#35831;&#27714;&#36830;&#25509;&#10;                        return mzituApi.RxImgList(&#10;                                MyOkHttpClient.getCacheControl(context),&#10;                                imgId,&#10;                                integer + &#34;&#34;&#10;                        );&#10;                    &#125;&#10;                &#125;&#10;        ).map(&#10;                new Func1&#60;String, ImgItem&#62;() &#123;&#10;                    @Override&#10;                    public ImgItem call(String s) &#123;&#10;                    //   &#22788;&#29702;&#27599;&#27425;&#35831;&#38382;&#30340;&#32467;&#26524;&#10;&#10;                        ImgItem img = new ImgItem();&#10;                        Elements mElements = JsoupUtil.getMzituImgItem(s);&#10;                        Element tempElement = mElements.first();&#10;&#10;                        img.setImgUrl(tempElement.select(&#34;img&#34;).attr(&#34;src&#34;));&#10;                        img.setUrl(tempElement.select(&#34;img&#34;).attr(&#34;src&#34;));&#10;                        img.setStory_title(tempElement.select(&#34;img&#34;).attr(&#34;alt&#34;));&#10;                        return img;&#10;                    &#125;&#10;                &#125;&#10;        );&#10;&#10;        return RxJavaUtil.rxIoAndMain(&#10;                observable,&#10;                new Subscriber&#60;ImgItem&#62;() &#123;&#10;&#10;                    @Override&#10;                    public void onCompleted() &#123;&#10;                        listener.onCompleted();&#10;                    &#125;&#10;&#10;                    @Override&#10;                    public void onError(Throwable e) &#123;&#10;                        listener.onError(e.toString());&#10;                        DebugUtil.debugLogErr(e, e.toString());&#10;                    &#125;&#10;&#10;                    @Override&#10;                    public void onNext(ImgItem imgItem) &#123;&#10;                        listener.onSuccess(imgItem);&#10;                    &#125;&#10;                &#125;&#10;        );&#10;    &#125;</span><br></pre></td></tr></table></figure></p>
+<hr>
+<h2 id="问题集">问题集</h2><ul>
+<li><a href="http://stackoverflow.com/questions/24610243/retrofit-error-url-query-string-must-not-have-replace-block" target="_blank" rel="external">Retrofit error URL query string must not have replace block</a></li>
+</ul>
+<hr>
+<h2 id="其他笔记">其他笔记</h2><p>@Path:路径</p>
+<p>@Query:查询条件，如：     </p>
+<pre><code><span class="attribute">xx</span>=<span class="string">yy</span>
+</code></pre><p>如果有多个查询条件可以使用: <code>@QueryMap</code> ;</p>
+<hr>
+<p>最后，推荐下自己的开源项目：</p>
+<p><a href="https://github.com/qq137712630/MeiZiNews" target="_blank" rel="external">有妹子的日报:https://github.com/qq137712630/MeiZiNews</a></p>
+<p><a href="http://www.wandoujia.com/apps/com.ms.meizinewsapplication" target="_blank" rel="external">APK下载：http://www.wandoujia.com/apps/com.ms.meizinewsapplication</a></p>
+<p>它使用了多个开源框架，并在 ReadMe 中都有标明其框架的使用在哪个方面，遇到了什么奇怪的问题，中文的哦，喜欢的， Star 一下。</p>
+<hr>
+<h3 id="我的公众号">我的公众号</h3><p><img src="/img/wx_er_wei_ma.jpg" alt="小成小店"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/06/18/Android 网络请求：Retrofit 使用/" data-id="cipo3j84h000qp0jw1y9cb5pf" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Android 夜间模式：Colorful 使用" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2016/06/17/Android 夜间模式：Colorful 使用/" class="article-date">
-  <time datetime="2016-06-17T13:07:36.895Z" itemprop="datePublished">2016-06-17</time>
+    <a href="/2016/06/18/Android 夜间模式：Colorful 使用/" class="article-date">
+  <time datetime="2016-06-18T05:54:55.972Z" itemprop="datePublished">2016-06-18</time>
 </a>
     
   </div>
@@ -75,7 +192,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/06/17/Android 夜间模式：Colorful 使用/">Android 夜间模式：Colorful 使用</a>
+      <a class="article-title" href="/2016/06/18/Android 夜间模式：Colorful 使用/">Android 夜间模式：Colorful 使用</a>
     </h1>
   
 
@@ -134,7 +251,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/06/17/Android 夜间模式：Colorful 使用/" data-id="cipjqyqdh000pkgjwpi1w56n9" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/06/18/Android 夜间模式：Colorful 使用/" data-id="cipo3j84k000rp0jwg1fr72id" class="article-share-link">Share</a>
       
       
     </footer>
@@ -190,7 +307,7 @@ public List<span class="variable">&lt;CollectEntity&gt;</span> queryCollectByhtm
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/04/27/greedao联表查询： joins的使用/" data-id="cipjqyqck000gkgjw5lj8xo70" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/04/27/greedao联表查询： joins的使用/" data-id="cipo3j83q000hp0jw10nayup3" class="article-share-link">Share</a>
       
       
     </footer>
@@ -278,7 +395,7 @@ Cursor mCursor = mDb.rawQuery(sql, null);</span></span>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/04/27/SQLite使用中遇到的坑/" data-id="cipjqyqcy000kkgjw39gl0fji" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/04/27/SQLite使用中遇到的坑/" data-id="cipo3j842000lp0jwz5qxb5mm" class="article-share-link">Share</a>
       
       
     </footer>
@@ -475,7 +592,7 @@ public void migrate(<span class="type">SQLiteDatabase</span> db, <span class="ty
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/03/08/greedao升级问题：表被删除处理/" data-id="cipjqyqcp000hkgjw3najr2vz" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/03/08/greedao升级问题：表被删除处理/" data-id="cipo3j83s000ip0jwagij767n" class="article-share-link">Share</a>
       
       
     </footer>
@@ -709,7 +826,7 @@ compile <span class="string">'com.android.support:multidex:1.0.1'</span>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/03/08/65535拆包处理-总结自《其实你不知道MultiDex到底有多坑》/" data-id="cipjqyqb20000kgjw1qnvohzi" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/03/08/65535拆包处理-总结自《其实你不知道MultiDex到底有多坑》/" data-id="cipo3j8260000p0jwpmii118j" class="article-share-link">Share</a>
       
       
     </footer>
@@ -768,7 +885,7 @@ compile <span class="string">'com.android.support:multidex:1.0.1'</span>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/03/08/重复引用-Duplicate files copied in APK/" data-id="cipjqyqbz000akgjwbee0e1yf" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/03/08/重复引用-Duplicate files copied in APK/" data-id="cipo3j83b000bp0jw3jp1oxnb" class="article-share-link">Share</a>
       
       
     </footer>
@@ -813,7 +930,7 @@ webView<span class="built_in">.</span>loadData(<span class="built_in">data</span
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/01/11/webview引入html片段乱码/" data-id="cipjqyqca000dkgjwypysp9yi" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/01/11/webview引入html片段乱码/" data-id="cipo3j83j000ep0jwvwl3a1qq" class="article-share-link">Share</a>
       
       
     </footer>
@@ -896,7 +1013,7 @@ mMultiStateView.getView(MultiStateView.VIEW_STATE_ERROR).findViewById(R.id.retry
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/01/01/MultiStateView加载框架学习/" data-id="cipjqyqd3000mkgjwmckn4ooi" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/01/01/MultiStateView加载框架学习/" data-id="cipo3j847000np0jwt31spwlf" class="article-share-link">Share</a>
       
       
     </footer>
@@ -944,49 +1061,7 @@ mMultiStateView.getView(MultiStateView.VIEW_STATE_ERROR).findViewById(R.id.retry
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/12/30/找不到org.apache.http/" data-id="cipjqyqc2000bkgjwxg566z2l" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-RxJava学习" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/12/03/RxJava学习/" class="article-date">
-  <time datetime="2015-12-03T15:15:42.793Z" itemprop="datePublished">2015-12-03</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/12/03/RxJava学习/">RxJava学习</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="github">github</h1><pre><code><span class="string">https:</span><span class="comment">//github.com/ReactiveX/RxAndroid</span>
-<span class="string">https:</span><span class="comment">//github.com/ReactiveX/RxJava</span>
-</code></pre><h1 id="相关文章">相关文章</h1><ul>
-<li><a href="http://gank.io/post/560e15be2dca930e00da1083#toc_1" target="_blank" rel="external">给 Android 开发者的 RxJava 详解</a></li>
-<li><a href="http://segmentfault.com/a/1190000004049490" target="_blank" rel="external">谜之RxJava （一） —— 最基本的观察者模式</a></li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/12/03/RxJava学习/" data-id="cipjqyqd1000lkgjwzob74uhv" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/12/30/找不到org.apache.http/" data-id="cipo3j83e000cp0jw3a0z2z3w" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1015,7 +1090,7 @@ mMultiStateView.getView(MultiStateView.VIEW_STATE_ERROR).findViewById(R.id.retry
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">September 2015</a><span class="archive-list-count">2</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">September 2015</a><span class="archive-list-count">2</span></li></ul>
     </div>
   </div>
 
@@ -1027,7 +1102,11 @@ mMultiStateView.getView(MultiStateView.VIEW_STATE_ERROR).findViewById(R.id.retry
       <ul>
         
           <li>
-            <a href="/2016/06/17/Android 夜间模式：Colorful 使用/">Android 夜间模式：Colorful 使用</a>
+            <a href="/2016/06/18/Android 网络请求：Retrofit 使用/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2016/06/18/Android 夜间模式：Colorful 使用/">Android 夜间模式：Colorful 使用</a>
           </li>
         
           <li>
@@ -1040,10 +1119,6 @@ mMultiStateView.getView(MultiStateView.VIEW_STATE_ERROR).findViewById(R.id.retry
         
           <li>
             <a href="/2016/03/08/greedao升级问题：表被删除处理/">(no title)</a>
-          </li>
-        
-          <li>
-            <a href="/2016/03/08/65535拆包处理-总结自《其实你不知道MultiDex到底有多坑》/">(no title)</a>
           </li>
         
       </ul>
